@@ -32,9 +32,9 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
-	@RequestMapping("/uploadForm")
+	@GetMapping("/")
 	public String home () {
-		return "uploadForm";
+		return "redirect:/uploadForm";
 	}
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,RedirectAttributes redirectAttributes) throws IOException{
