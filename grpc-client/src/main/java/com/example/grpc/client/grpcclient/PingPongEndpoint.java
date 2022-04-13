@@ -31,16 +31,16 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
-	@GetMapping("/upload")
+	@GetMapping("/")
 	public String home () {
 		return "uploadForm";
 	}
-	@PostMapping("/upload")
+	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,RedirectAttributes redirectAttributes) throws IOException{
 
 			
 		System.out.println("I'M HERE");
-		// String data1 = new String(file.getBytes());
+		//String data1 = new String(file.getBytes());
 		// Matrix matrix1=new Matrix(data1);
 
 		// String data2 = new String(file2.getBytes());
@@ -57,6 +57,6 @@ public class PingPongEndpoint {
 		// redirectAttributes.addFlashAttribute("error","");
 		
 
-		return "redirect:/add";
+		return "redirect:/";
 	}
 }
