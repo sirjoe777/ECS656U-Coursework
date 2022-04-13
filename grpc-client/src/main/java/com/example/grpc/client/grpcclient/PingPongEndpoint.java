@@ -34,7 +34,7 @@ public class PingPongEndpoint {
 	}
 	@GetMapping("/")
 	public String home () {
-		return "redirect:/uploadForm.html";
+		return "uploadForm.html";
 	}
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,RedirectAttributes redirectAttributes) throws IOException{
@@ -58,6 +58,6 @@ public class PingPongEndpoint {
 		// redirectAttributes.addFlashAttribute("error","");
 		
 
-		return "redirect:/";
+		return "redirect:/add";
 	}
 }
