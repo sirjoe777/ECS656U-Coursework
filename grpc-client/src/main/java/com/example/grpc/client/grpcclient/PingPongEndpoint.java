@@ -31,32 +31,32 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
-	@GetMapping("/")
-	public String home () {
-		return "uploadForm";
-	}
-	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file,RedirectAttributes redirectAttributes) throws IOException{
+	// @GetMapping("/")
+	// public String home () {
+	// 	return "uploadForm";
+	// }
+	// @PostMapping("/")
+	// public String handleFileUpload(@RequestParam("file") MultipartFile file,RedirectAttributes redirectAttributes) throws IOException{
 
 			
-		System.out.println("I'M HERE");
-		//String data1 = new String(file.getBytes());
-		// Matrix matrix1=new Matrix(data1);
+	// 	System.out.println("I'M HERE");
+	// 	//String data1 = new String(file.getBytes());
+	// 	// Matrix matrix1=new Matrix(data1);
 
-		// String data2 = new String(file2.getBytes());
-		// Matrix matrix2=new Matrix(data2);
+	// 	// String data2 = new String(file2.getBytes());
+	// 	// Matrix matrix2=new Matrix(data2);
 
-		// checkEqual(matrix1, matrix2);
-		// if(operation.equals("Addition")){
-		// 	redirectAttributes.addFlashAttribute("result", grpcClientService.add(matrix1,matrix2));
-		// }
-		// else{
-		// 	redirectAttributes.addFlashAttribute("result", grpcClientService.multiply(matrix1,matrix2,deadline));
-		// }
+	// 	// checkEqual(matrix1, matrix2);
+	// 	// if(operation.equals("Addition")){
+	// 	// 	redirectAttributes.addFlashAttribute("result", grpcClientService.add(matrix1,matrix2));
+	// 	// }
+	// 	// else{
+	// 	// 	redirectAttributes.addFlashAttribute("result", grpcClientService.multiply(matrix1,matrix2,deadline));
+	// 	// }
 		
-		// redirectAttributes.addFlashAttribute("error","");
+	// 	// redirectAttributes.addFlashAttribute("error","");
 		
 
-		return "redirect:/";
-	}
+	// 	return "redirect:/";
+	// }
 }
