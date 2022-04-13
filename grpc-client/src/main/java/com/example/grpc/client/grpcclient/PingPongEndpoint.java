@@ -35,18 +35,18 @@ public class PingPongEndpoint {
 	GRPCClientService grpcClientService; 
 	StorageService storageService;   
 	@Autowired
-    	public PingPongEndpoint(GRPCClientService grpcClientService, StorageService storageService) {
-        	this.grpcClientService = grpcClientService;
+    	public PingPongEndpoint(StorageService storageService) {
+        	//this.grpcClientService = grpcClientService;
 			this.storageService = storageService;
     	}    
-	@GetMapping("/ping")
-    	public String ping() {
-        	return grpcClientService.ping();
-    	}
-        @GetMapping("/add")
-	public String add() {
-		return grpcClientService.add();
-	}
+	// @GetMapping("/ping")
+    // 	public String ping() {
+    //     	return grpcClientService.ping();
+    // 	}
+    //     @GetMapping("/add")
+	// public String add() {
+	// 	return grpcClientService.add();
+	// }
 	
 	@GetMapping("/")
 	public String listUploadedFiles(Model model) throws IOException {
