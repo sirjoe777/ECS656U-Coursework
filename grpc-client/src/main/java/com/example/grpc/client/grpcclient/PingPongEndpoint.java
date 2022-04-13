@@ -8,13 +8,15 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+<<<<<<< HEAD
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+=======
+>>>>>>> parent of 015950b (Started)
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -43,6 +45,7 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
+<<<<<<< HEAD
 	
 	@GetMapping("/")
 	public String redirect_to_form(){
@@ -57,4 +60,6 @@ public class PingPongEndpoint {
 		
 		return "redirect:/add";
 	}
+=======
+>>>>>>> parent of 015950b (Started)
 }
