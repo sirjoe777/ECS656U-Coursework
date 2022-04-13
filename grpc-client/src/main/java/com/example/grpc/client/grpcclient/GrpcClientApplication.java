@@ -7,8 +7,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 
-import com.example.grpc.client.grpcclient.storage.StorageService;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -51,14 +49,6 @@ public class GrpcClientApplication extends SpringBootServletInitializer {
 
 		channel.shutdown();*/
 //		SpringApplication.run(GrpcClientApplication.class, args);
-	}
-
-	@Bean
-	CommandLineRunner init(StorageService storageService) {
-		return (args) -> {
-			storageService.deleteAll();
-			storageService.init();
-		};
 	}
 
 }
