@@ -11,6 +11,8 @@ import io.grpc.ManagedChannelBuilder;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 @Service
 public class GRPCClientService {
     public String ping() {
@@ -44,4 +46,11 @@ public class GRPCClientService {
 		String resp= A.getC00()+" "+A.getC01()+"<br>"+A.getC10()+" "+A.getC11()+"\n";
 		return resp;
     }
+	public String handleFileUpload(@RequestParam("file") MultipartFile file) {
+
+		// //storageService.store(file);
+		// redirectAttributes.addFlashAttribute("message",
+		// 		"You successfully uploaded " + file.getOriginalFilename() + "!");
+		return "redirect:/";
+	}
 }

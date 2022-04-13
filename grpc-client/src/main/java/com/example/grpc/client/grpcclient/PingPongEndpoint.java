@@ -34,13 +34,11 @@ public class PingPongEndpoint {
 	@PostMapping("/upload")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
+		System.out.println("Here");
 
 		//storageService.store(file);
 		redirectAttributes.addFlashAttribute("message",
 				"You successfully uploaded " + file.getOriginalFilename() + "!");
-		
-		System.out.println("I'M HERE");
-
 		return "redirect:/";
 	}
 }
