@@ -58,6 +58,8 @@ public class PingPongEndpoint {
 				else{
 					String string_matrix1 = matrices[0];
 					String string_matrix2 = matrices[1];
+					System.out.println(string_matrix1);
+					System.out.println(string_matrix2);
 
 					String [] rows1 = string_matrix1.split("\n");
 					String [] rows2 = string_matrix2.split("\n");
