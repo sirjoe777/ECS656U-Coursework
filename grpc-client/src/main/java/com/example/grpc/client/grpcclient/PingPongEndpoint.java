@@ -49,7 +49,7 @@ public class PingPongEndpoint {
 		else{
 			try{
 				String content = new String(file.getBytes());
-				String [] matrices = content.split("&\n");
+				String [] matrices = content.split("&");
 				//Check that exactly two matrices have been uploaded
 				if (matrices.length!=2){
 					redirectAttributes.addFlashAttribute("message", "Please make sure the file contains exactly two matrices, in the format described in README.");
@@ -65,8 +65,8 @@ public class PingPongEndpoint {
 					String [] rows2 = string_matrix2.split("\n");
 					//Check size is a power of 2
 					if (checkPowerOfTwo(rows1.length) || checkPowerOfTwo(rows2.length)){
-						System.out.println(rows1);
-						System.out.println(rows2);
+						System.out.println(rows1.length);
+						System.out.println(rows2.length);
 						redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
 						return "redirect:/";
 					}
