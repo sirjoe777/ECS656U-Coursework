@@ -49,7 +49,7 @@ public class PingPongEndpoint {
 		else{
 			try{
 				String content = new String(file.getBytes());
-				String [] matrices = content.split("&");
+				String [] matrices = content.split("&\\n");
 				//Check that exactly two matrices have been uploaded
 				if (matrices.length!=2){
 					redirectAttributes.addFlashAttribute("message", "Please make sure the file contains exactly two matrices, in the format described in README.");
