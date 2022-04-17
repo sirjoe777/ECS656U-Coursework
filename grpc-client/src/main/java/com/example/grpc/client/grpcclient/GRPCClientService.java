@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Service
 public class GRPCClientService {
+	private int [][] matrix1;
+	private int [][] matrix2;
+	
     public String ping() {
         	ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9090)
                 .usePlaintext()
@@ -33,14 +36,38 @@ public class GRPCClientService {
 		MatrixServiceGrpc.MatrixServiceBlockingStub stub
 		 = MatrixServiceGrpc.newBlockingStub(channel);
 		MatrixReply A=stub.addBlock(MatrixRequest.newBuilder()
-			.setA00(1)
-			.setA01(2)
-			.setA10(5)
-			.setA11(6)
-			.setB00(1)
-			.setB01(2)
-			.setB10(5)
-			.setB11(6)
+			.setA00(matrix1[0][0])
+			.setA01(matrix1[0][1])
+			.setA02(matrix1[0][2])
+			.setA03(matrix1[0][3])
+			.setA10(matrix1[1][0])
+			.setA11(matrix1[1][1])
+			.setA12(matrix1[1][2])
+			.setA13(matrix1[1][3])
+			.setA20(matrix1[2][0])
+			.setA21(matrix1[2][1])
+			.setA22(matrix1[2][2])
+			.setA23(matrix1[2][3])
+			.setA30(matrix1[3][0])
+			.setA31(matrix1[3][1])
+			.setA32(matrix1[3][2])
+			.setA33(matrix1[3][3])
+			.setB00(matrix1[0][0])
+			.setB01(matrix1[0][1])
+			.setB02(matrix1[0][2])
+			.setB03(matrix1[0][3])
+			.setB10(matrix1[1][0])
+			.setB11(matrix1[1][1])
+			.setB12(matrix1[1][2])
+			.setB13(matrix1[1][3])
+			.setB20(matrix1[2][0])
+			.setB21(matrix1[2][1])
+			.setB22(matrix1[2][2])
+			.setB23(matrix1[2][3])
+			.setB30(matrix1[3][0])
+			.setB31(matrix1[3][1])
+			.setB32(matrix1[3][2])
+			.setB33(matrix1[3][3])
 			.build());
 		String resp= A.getC00()+" "+A.getC01()+"<br>"+A.getC10()+" "+A.getC11()+"\n";
 		return resp;
@@ -68,12 +95,8 @@ public class GRPCClientService {
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
 				return "redirect:/";
 			}
-			int [][] matrix1 = new int[rows1.length][rows1.length];
-			int [][] matrix2 = new int[rows2.length][rows2.length];
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
-			printMatrix(matrix1);
-			printMatrix(matrix2);
 		}
 		catch(Exception e){
 			System.out.println("Exception in processMatrices");
