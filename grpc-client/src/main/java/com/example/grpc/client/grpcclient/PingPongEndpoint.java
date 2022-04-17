@@ -36,25 +36,20 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
-	@GetMapping("/")
+	@GetMapping("/upload")
 	public String home () {
-		if (string_matrix1==null && string_matrix2==null){
-			return "uploadForm.html";
-		}
-		else{
-			return "redirect:/add";
-		}
+		return "uploadForm.html";
 	}
-	@PostMapping("/")
+	@PostMapping("/upload")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
 			redirectAttributes.addFlashAttribute("message", "Please make sure the first file is not empty!");
-			return "redirect:/";
+			return "redirect:/upload";
 		} 
 		if (file2.getBytes().length==0){
 			redirectAttributes.addFlashAttribute("message", "Please make sure the second file is not empty!");
-			return "redirect:/";
+			return "redirect:/upload";
 		} 
 		string_matrix1 = new String(file1.getBytes());
 		string_matrix2 = new String(file2.getBytes());

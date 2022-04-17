@@ -56,20 +56,20 @@ public class GRPCClientService {
 			//Check size is a power of 2
 			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-				return "redirect:/";
+				return "redirect:/upload";
 			}
 			//Check if provided matrices are square
 			boolean isSquare1 = check_square_matrix(rows1);
 			boolean isSquare2 = check_square_matrix(rows2);
 			if (!isSquare1 || !isSquare2){
 				redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
-				return "redirect:/";
+				return "redirect:/upload";
 			}
 			//We know matrices are square, so we can check if they have same size by simply checking
 			//that the numner of rows is the same.
 			if (rows1.length!=rows2.length){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-				return "redirect:/";
+				return "redirect:/upload";
 			}
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
