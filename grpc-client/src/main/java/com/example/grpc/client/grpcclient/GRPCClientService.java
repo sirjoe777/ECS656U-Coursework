@@ -78,7 +78,8 @@ public class GRPCClientService {
 			// printMatrix(matrix2);
 		}
 		catch(Exception e){
-
+			System.out.println("Exception in processMatrices");
+			System.out.println(e.getMessage());
 		}
 		return "redirect:/";
 	}
@@ -113,7 +114,8 @@ public class GRPCClientService {
 				}
 			}
 			catch(Exception e){
-
+				System.out.println("Exception in check_square_matrix");
+				System.out.println(e.getMessage());
 			}
 		}
 		return true;
@@ -136,6 +138,7 @@ public class GRPCClientService {
 			}
 		}
 		catch(Exception e){
+			System.out.println("Exception in buildMatrix");
 			System.out.println(e.getMessage());
 		}
 		return matrix;
