@@ -41,13 +41,11 @@ public class PingPongEndpoint {
 	}
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
-		System.out.println(new String(file1.getBytes()));
-		System.out.println(new String(file2.getBytes()));
 		//Make sure a file has been uploaded
-		// if (file.getBytes().length==0){
-		// 	redirectAttributes.addFlashAttribute("message", "Please upload a file containing two matrices!");
-		// 	return "redirect:/";
-		// } 
+		if (file1.getBytes().length==0){
+			redirectAttributes.addFlashAttribute("message", "Please upload a file containing two matrices!");
+			return "redirect:/";
+		} 
 		// else{
 		// 	try{
 		// 		String content = new String(file.getBytes());
