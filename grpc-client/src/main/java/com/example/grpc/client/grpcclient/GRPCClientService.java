@@ -129,12 +129,13 @@ public class GRPCClientService {
 
 				String [] row_entries = rows[row].split(",");
 				
-				System.out.println("printing row "+row);
-				printArray(row_entries);
-				// for (int column=0; column<SIZE; column++){
-				// 	matrix[row][column] = Integer.parseInt(row_entries[column]);
-				// 	//System.out.print(matrix[row][column]);
-				// }
+				//System.out.println("printing row "+row);
+				//printArray(row_entries);
+				for (int column=0; column<SIZE; column++){
+					System.out.println(row_entries[column]);
+					matrix[row][column] = Integer.parseInt(row_entries[column]);
+					//System.out.print(matrix[row][column]);
+				}
 				//System.out.println();
 			}
 		}
