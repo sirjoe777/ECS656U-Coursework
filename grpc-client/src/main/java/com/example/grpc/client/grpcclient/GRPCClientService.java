@@ -127,7 +127,7 @@ public class GRPCClientService {
 		try{
 			for (int row=0; row<SIZE; row++){
 
-				String [] row_entries = rows[row].split(",");
+				String [] row_entries = rows[row].split("\\s*,\\s*");
 				
 				//System.out.println("printing row "+row);
 				//printArray(row_entries);
@@ -139,7 +139,7 @@ public class GRPCClientService {
 				//System.out.println();
 			}
 		}
-		catch(Exception e){
+		catch(NumberFormatException e){
 			System.out.println("Exception in buildMatrix");
 			System.out.println(e.toString());
 		}
