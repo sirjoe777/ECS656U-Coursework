@@ -50,11 +50,13 @@ public class GRPCClientService {
 		try{
 			String [] rows1 = string_matrix1.split("\n");
 			String [] rows2 = string_matrix2.split("\n");
+			System.out.println("printing rows1");
+			System.out.println("printing rows2");
+			printArray(rows1);
+			printArray(rows2);
 			//Check size is a power of 2
 			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-				System.out.println(rows1.length);
-				System.out.println(rows2.length);
 				return "redirect:/";
 			}
 			//Check if provided matrices are square
@@ -72,9 +74,9 @@ public class GRPCClientService {
 			}
 			int [][] matrix1 = new int[rows1.length][rows1.length];
 			int [][] matrix2 = new int[rows2.length][rows2.length];
-			System.out.println("Building matrix 1");
+			//System.out.println("Building matrix 1");
 			matrix1 = buildMatrix(rows1);
-			System.out.println("Building matrix 2");
+			//System.out.println("Building matrix 2");
 			matrix2 = buildMatrix(rows2);
 			// printMatrix(matrix1);
 			// printMatrix(matrix2);
@@ -88,10 +90,10 @@ public class GRPCClientService {
 	private void printMatrix(int [][] matrix){
 		for (int row=0; row<matrix.length; row++){
 			for(int column=0; column<matrix[row].length; column++){
-				System.out.print(matrix[row][column]);
-				System.out.print(" ");
+				//System.out.print(matrix[row][column]);
+				//System.out.print(" ");
 			}
-			System.out.println();
+			//System.out.println();
 		}
 	}
 
@@ -138,5 +140,11 @@ public class GRPCClientService {
 
 		}
 		return matrix;
+	}
+
+	private void printArray(String[] array){
+		for (String element : array){
+			System.out.println(element);
+		}
 	}
 }
