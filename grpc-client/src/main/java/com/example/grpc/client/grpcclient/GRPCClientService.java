@@ -128,7 +128,7 @@ public class GRPCClientService {
 			for (int row=0; row<SIZE; row++){
 				String [] row_entries = rows[row].split(",");
 				
-				System.out.println("printing row "+row);
+				//System.out.println("printing row "+row);
 				printArray(row_entries);
 				for (int column=0; column<SIZE; column++){
 					matrix[row][column] = Integer.parseInt(row_entries[column]);
