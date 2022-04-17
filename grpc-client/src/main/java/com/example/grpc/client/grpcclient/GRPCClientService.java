@@ -70,12 +70,10 @@ public class GRPCClientService {
 			}
 			int [][] matrix1 = new int[rows1.length][rows1.length];
 			int [][] matrix2 = new int[rows2.length][rows2.length];
-			//System.out.println("Building matrix 1");
 			matrix1 = buildMatrix(rows1);
-			//System.out.println("Building matrix 2");
 			matrix2 = buildMatrix(rows2);
-			// printMatrix(matrix1);
-			// printMatrix(matrix2);
+			printMatrix(matrix1);
+			printMatrix(matrix2);
 		}
 		catch(Exception e){
 			System.out.println("Exception in processMatrices");
@@ -87,10 +85,10 @@ public class GRPCClientService {
 	private void printMatrix(int [][] matrix){
 		for (int row=0; row<matrix.length; row++){
 			for(int column=0; column<matrix[row].length; column++){
-				//System.out.print(matrix[row][column]);
-				//System.out.print(" ");
+				System.out.print(matrix[row][column]);
+				System.out.print(" ");
 			}
-			//System.out.println();
+			System.out.println();
 		}
 	}
 
@@ -128,18 +126,12 @@ public class GRPCClientService {
 			for (int row=0; row<SIZE; row++){
 
 				String [] row_entries = rows[row].replaceAll("[^,0-9]","").split(",");
-				
-				//System.out.println("printing row "+row);
-				//printArray(row_entries);
 				for (int column=0; column<SIZE; column++){
-					System.out.println(row_entries[column]);
 					matrix[row][column] = Integer.parseInt(row_entries[column]);
-					//System.out.print(matrix[row][column]);
 				}
-				//System.out.println();
 			}
 		}
-		catch(NumberFormatException e){
+		catch(Exception e){
 			System.out.println("Exception in buildMatrix");
 			System.out.println(e.toString());
 		}
