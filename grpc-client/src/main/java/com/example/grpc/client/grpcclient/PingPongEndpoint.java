@@ -20,10 +20,9 @@ import java.io.IOException;
 import javax.naming.NamingException;
 
 @Controller
-public class PingPongEndpoint {
+public class PingPongEndpoint {    
 	private String string_matrix1;
-	private String string_matrix2;     
-
+	private String string_matrix2;
 	GRPCClientService grpcClientService;    
 	@Autowired
     	public PingPongEndpoint(GRPCClientService grpcClientService) {
@@ -37,20 +36,16 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
-
 	@GetMapping("/")
 	public String home () {
 		if (string_matrix1==null && string_matrix2==null){
-			return "redirect:/upload";
+			return "uploadForm.html";
 		}
-		return "Successfully uploaded files!";
+		else{
+			return "redirect:/add";
+		}
 	}
-
-	@GetMapping("/upload")
-	public String upload () {
-		return "uploadForm.html";
-	}
-	@PostMapping("/upload")
+	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
