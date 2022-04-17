@@ -41,6 +41,7 @@ public class PingPongEndpoint {
 		return "uploadForm";
 	}
 	@PostMapping("/")
+	@ResponseBody
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
