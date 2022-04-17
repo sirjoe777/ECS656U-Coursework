@@ -121,7 +121,6 @@ public class GRPCClientService {
 
 	private int[][] buildMatrix(String[] rows){
 		final int SIZE = rows.length;
-		System.out.println("Size is "+SIZE);
 		int [][] matrix = new int[SIZE][SIZE];
 		try{
 			for (int row=0; row<SIZE; row++){
@@ -137,7 +136,7 @@ public class GRPCClientService {
 			}
 		}
 		catch(Exception e){
-
+			System.out.println(e.getMessage());
 		}
 		return matrix;
 	}
