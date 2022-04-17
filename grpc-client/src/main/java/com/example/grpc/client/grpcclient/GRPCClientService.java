@@ -121,10 +121,12 @@ public class GRPCClientService {
 
 	private int[][] buildMatrix(String[] rows){
 		final int SIZE = rows.length;
+		System.out.println("Size is "+SIZE);
 		int [][] matrix = new int[SIZE][SIZE];
 		try{
 			for (int row=0; row<SIZE; row++){
 				String [] row_entries = rows[row].split(",");
+				
 				System.out.println("printing row "+row);
 				printArray(row_entries);
 				for (int column=0; column<SIZE; column++){
