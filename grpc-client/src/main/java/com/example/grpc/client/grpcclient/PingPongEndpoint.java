@@ -43,105 +43,17 @@ public class PingPongEndpoint {
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
-			redirectAttributes.addFlashAttribute("message", "Please upload a file containing two matrices!");
+			redirectAttributes.addFlashAttribute("message", "Please make sure the first file is not empty!");
 			return "redirect:/";
 		} 
-		// else{
-		// 	try{
-		// 		String content = new String(file.getBytes());
-		// 		String [] matrices = content.split("&");
-		// 		//Check that exactly two matrices have been uploaded
-		// 		if (matrices.length!=2){
-		// 			redirectAttributes.addFlashAttribute("message", "Please make sure the file contains exactly two matrices, in the format described in README.");
-		// 			return "redirect:/";
-		// 		}
-		// 		else{
-		// 			String string_matrix1 = matrices[0];
-		// 			String string_matrix2 = matrices[1];
-		// 			System.out.println(string_matrix1);
-		// 			System.out.println(string_matrix2);
-
-		// 			String [] rows1 = string_matrix1.split("\n");
-		// 			String [] rows2 = string_matrix2.split("\n");
-		// 			//Check size is a power of 2
-		// 			if (checkPowerOfTwo(rows1.length) || checkPowerOfTwo(rows2.length)){
-		// 				System.out.println(rows1.length);
-		// 				System.out.println(rows2.length);
-		// 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-		// 				return "redirect:/";
-		// 			}
-		// 			//Check if provided matrices are square
-		// 			boolean isSquare1 = check_square_matrix(rows1);
-		// 			boolean isSquare2 = check_square_matrix(rows2);
-		// 			if (!isSquare1 || !isSquare2){
-		// 				redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
-		// 				return "redirect:/";
-		// 			}
-		// 			//We know matrices are square, so we can check if they have same size by simply checking
-		// 			//that the numner of rows is the same.
-		// 			if (rows1.length!=rows2.length){
-		// 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-		// 				return "redirect:/";
-		// 			}
-		// 			int [][] matrix1 = new int[rows1.length][rows1.length];
-		// 			int [][] matrix2 = new int[rows2.length][rows2.length];
-		// 			matrix1 = buildMatrix(rows1);
-		// 			matrix2 = buildMatrix(rows2);
-		// 			System.out.println(string_matrix1);
-		// 			System.out.println();
-		// 			System.out.println(string_matrix1);
-		// 		}
-		// 	}
-		// 	catch(Exception e){
-
-		// 	}
-		// }
-		return "redirect:/";
-	}
-
-	//Taken from https://www.geeksforgeeks.org/java-program-to-find-whether-a-no-is-power-of-two/
-	static boolean checkPowerOfTwo(int n)
-    {
-        if (n == 0)
-            return false;
- 
-        while (n != 1) {
-            if (n % 2 != 0)
-                return false;
-            n = n / 2;
-        }
-        return true;
-    }
-
-	private boolean check_square_matrix(String[] rows){
-		for (String row : rows){
-			try{
-				String [] row_entries = row.split(",");
-				if (row_entries.length!=rows.length){
-					return false;
-				}
-			}
-			catch(Exception e){
-
-			}
-		}
-		return true;
-	}
-
-	private int[][] buildMatrix(String[] rows){
-		final int SIZE = rows.length;
-		int [][] matrix = new int[SIZE][SIZE];
-		try{
-			for (int row=0; row<SIZE; row++){
-				String [] row_entries = rows[row].split(",");
-				for (int column=0; column<SIZE; column++){
-					matrix[row][column] = Integer.parseInt(row_entries[column]);
-				}
-			}
-		}
-		catch(Exception e){
-
-		}
-		return matrix;
+		if (file2.getBytes().length==0){
+			redirectAttributes.addFlashAttribute("message", "Please make sure the second file is not empty!");
+			return "redirect:/";
+		} 
+		String string_matrix1 = new String(file1.getBytes());
+		String string_matrix2 = new String(file2.getBytes());
+		System.out.println(string_matrix1);
+		System.out.println(string_matrix2);
+		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
 }
