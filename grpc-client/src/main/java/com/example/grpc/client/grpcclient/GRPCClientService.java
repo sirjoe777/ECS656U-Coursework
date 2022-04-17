@@ -51,7 +51,7 @@ public class GRPCClientService {
 			String [] rows1 = string_matrix1.split("\n");
 			String [] rows2 = string_matrix2.split("\n");
 			//Check size is a power of 2
-			if (checkPowerOfTwo(rows1.length) || checkPowerOfTwo(rows2.length)){
+			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
 				System.out.println(rows1.length);
 				System.out.println(rows2.length);
