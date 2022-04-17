@@ -37,14 +37,20 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
+
 	@GetMapping("/")
 	public String home () {
 		if (string_matrix1==null && string_matrix2==null){
-			return "uploadForm.html";
+			return "redirect:/upload";
 		}
 		return "Successfully uploaded files!";
 	}
-	@PostMapping("/")
+
+	@GetMapping("/upload")
+	public String upload () {
+		return "uploadForm.html";
+	}
+	@PostMapping("/upload")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
