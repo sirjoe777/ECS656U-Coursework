@@ -127,7 +127,7 @@ public class GRPCClientService {
 		try{
 			for (int row=0; row<SIZE; row++){
 
-				String [] row_entries = rows[row].split("\\s*,\\s*");
+				String [] row_entries = rows[row].replaceAll("[^,0-9]","").split(",");
 				
 				//System.out.println("printing row "+row);
 				//printArray(row_entries);
