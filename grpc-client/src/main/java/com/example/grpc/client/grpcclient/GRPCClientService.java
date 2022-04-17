@@ -53,6 +53,8 @@ public class GRPCClientService {
 			//Check size is a power of 2
 			if (checkPowerOfTwo(rows1.length) || checkPowerOfTwo(rows2.length)){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
+				System.out.println(rows1.length);
+				System.out.println(rows2.length);
 				return "redirect:/";
 			}
 			//Check if provided matrices are square
