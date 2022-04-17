@@ -139,7 +139,7 @@ public class GRPCClientService {
 		}
 		catch(Exception e){
 			System.out.println("Exception in buildMatrix");
-			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 		}
 		return matrix;
 	}
