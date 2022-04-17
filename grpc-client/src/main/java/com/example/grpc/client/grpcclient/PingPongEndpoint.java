@@ -21,8 +21,7 @@ import javax.naming.NamingException;
 
 @Controller
 public class PingPongEndpoint {    
-	private String string_matrix1;
-	private String string_matrix2;
+	
 	GRPCClientService grpcClientService;    
 	@Autowired
     	public PingPongEndpoint(GRPCClientService grpcClientService) {
@@ -36,23 +35,23 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
-	@GetMapping("/upload")
+	@GetMapping("/")
 	public String home () {
 		return "uploadForm.html";
 	}
-	@PostMapping("/upload")
+	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
 			redirectAttributes.addFlashAttribute("message", "Please make sure the first file is not empty!");
-			return "redirect:/upload";
+			return "redirect:/";
 		} 
 		if (file2.getBytes().length==0){
 			redirectAttributes.addFlashAttribute("message", "Please make sure the second file is not empty!");
-			return "redirect:/upload";
+			return "redirect:/";
 		} 
-		string_matrix1 = new String(file1.getBytes());
-		string_matrix2 = new String(file2.getBytes());
+		String string_matrix1 = new String(file1.getBytes());
+		String string_matrix2 = new String(file2.getBytes());
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
 }
