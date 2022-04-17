@@ -51,8 +51,8 @@ public class GRPCClientService {
 			String [] rows1 = string_matrix1.split("\n");
 			String [] rows2 = string_matrix2.split("\n");
 			System.out.println("printing rows1");
-			System.out.println("printing rows2");
 			printArray(rows1);
+			System.out.println("printing rows2");
 			printArray(rows2);
 			//Check size is a power of 2
 			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
@@ -131,9 +131,9 @@ public class GRPCClientService {
 				String [] row_entries = rows[row].split(",");
 				for (int column=0; column<SIZE; column++){
 					matrix[row][column] = Integer.parseInt(row_entries[column]);
-					System.out.print(matrix[row][column]);
+					//System.out.print(matrix[row][column]);
 				}
-				System.out.println();
+				//System.out.println();
 			}
 		}
 		catch(Exception e){
