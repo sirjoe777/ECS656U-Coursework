@@ -75,7 +75,7 @@ public class GRPCClientService {
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
 			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
-			return "redirect:/display";
+			return "redirect:/";
 		}
 		catch(Exception e){
 			System.out.println("Exception in processMatrices");

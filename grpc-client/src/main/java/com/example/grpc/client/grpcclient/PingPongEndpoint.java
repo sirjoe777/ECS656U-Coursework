@@ -40,8 +40,20 @@ public class PingPongEndpoint {
 		return grpcClientService.add();
 	}
 	@GetMapping("/")
-	public String home () {
-		return "uploadForm";
+	public String home (RedirectAttributes redirectAttributes) {
+		if (string_matrix1==null && string_matrix2==null){
+			redirectAttributes.addFlashAttribute("message", "Please upload two files!");
+			return "redirect:/";
+		}
+		else if (string_matrix1==null){
+			redirectAttributes.addFlashAttribute("message", "Please upload a file containing the first matrix!");
+			return "redirect:/";
+		}
+		else if (string_matrix2==null){
+			redirectAttributes.addFlashAttribute("message", "Please upload a file containing the second matrix!");
+			return "redirect:/";
+		}
+		return "Successfully uploaded files!";
 	}
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
@@ -57,35 +69,5 @@ public class PingPongEndpoint {
 		string_matrix1 = new String(file1.getBytes());
 		string_matrix2 = new String(file2.getBytes());
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
-	}
-	@GetMapping("/display")
-	public String displayMatrices(Model mod) {
-		if (string_matrix1!=null && string_matrix2!=null){
-			Integer[][] test1 = new Integer[3][3];
-			Integer[][] test2 = new Integer[3][3];
-			test1[0][0]=0;
-			test1[0][1]=0;
-			test1[0][2]=0;
-			test1[1][0]=0;
-			test1[1][1]=0;
-			test1[1][2]=0;
-			test1[2][0]=0;
-			test1[2][1]=0;
-			test1[2][2]=0;
-			test2[0][0]=0;
-			test2[0][1]=0;
-			test2[0][2]=0;
-			test2[1][0]=0;
-			test2[1][1]=0;
-			test2[1][2]=0;
-			test2[2][0]=0;
-			test2[2][1]=0;
-			test2[2][2]=0;
-			mod.addAttribute("M1", test1);
-			mod.addAttribute("M2", test2);
-			return "display";
-		}
-		else return "uploadForm";
-		
 	}
 }
