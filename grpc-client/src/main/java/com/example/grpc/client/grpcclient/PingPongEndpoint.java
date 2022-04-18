@@ -59,31 +59,32 @@ public class PingPongEndpoint {
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
 	@GetMapping("/display")
+	@ResponseBody
 	public String displayMatrices(Model mod) {
 		if (string_matrix1!=null && string_matrix2!=null){
-			Integer[][] test1 = new Integer[3][3];
-			Integer[][] test2 = new Integer[3][3];
-			test1[0][0]=0;
-			test1[0][1]=0;
-			test1[0][2]=0;
-			test1[1][0]=0;
-			test1[1][1]=0;
-			test1[1][2]=0;
-			test1[2][0]=0;
-			test1[2][1]=0;
-			test1[2][2]=0;
-			test2[0][0]=0;
-			test2[0][1]=0;
-			test2[0][2]=0;
-			test2[1][0]=0;
-			test2[1][1]=0;
-			test2[1][2]=0;
-			test2[2][0]=0;
-			test2[2][1]=0;
-			test2[2][2]=0;
-			mod.addAttribute("M1", test1);
-			mod.addAttribute("M2", test2);
-			return "display";
+			// Integer[][] test1 = new Integer[3][3];
+			// Integer[][] test2 = new Integer[3][3];
+			// test1[0][0]=0;
+			// test1[0][1]=0;
+			// test1[0][2]=0;
+			// test1[1][0]=0;
+			// test1[1][1]=0;
+			// test1[1][2]=0;
+			// test1[2][0]=0;
+			// test1[2][1]=0;
+			// test1[2][2]=0;
+			// test2[0][0]=0;
+			// test2[0][1]=0;
+			// test2[0][2]=0;
+			// test2[1][0]=0;
+			// test2[1][1]=0;
+			// test2[1][2]=0;
+			// test2[2][0]=0;
+			// test2[2][1]=0;
+			// test2[2][2]=0;
+			// mod.addAttribute("M1", test1);
+			// mod.addAttribute("M2", test2);
+			return string_matrix1+"\n"+string_matrix2;
 		}
 		else return "uploadForm";
 		
