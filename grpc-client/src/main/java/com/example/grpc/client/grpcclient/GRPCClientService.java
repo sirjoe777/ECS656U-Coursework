@@ -53,14 +53,6 @@ public class GRPCClientService {
 		for (int i=0; i<blocks_1.size(); i++){
 			int [][] current_block1 = blocks_1.get(i);
 			int [][] current_block2 = blocks_2.get(i);
-			System.out.println("Setting A00: "+current_block1[0][0]);
-			System.out.println("Setting A01: "+current_block1[0][1]);
-			System.out.println("Setting A10: "+current_block1[1][0]);
-			System.out.println("Setting A11: "+current_block1[1][1]);
-			System.out.println("Setting B00: "+current_block2[0][0]);
-			System.out.println("Setting B01: "+current_block2[0][1]);
-			System.out.println("Setting B10: "+current_block2[1][0]);
-			System.out.println("Setting B11: "+current_block2[1][1]);
 			MatrixReply current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 			.setA00(current_block1[0][0])
 			.setA01(current_block1[0][1])
@@ -213,17 +205,22 @@ public class GRPCClientService {
 		int reply_index2 = 1;
 		String response = "";
 		MatrixReply current_reply;
-		while (row<SIZE){
-			current_reply = replies.get(reply_index1);
-			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
-			current_reply = replies.get(reply_index2);
-			response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
-			response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
-			current_reply = replies.get(reply_index2);
-			response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
-			reply_index1+=2;
-			reply_index2+=2;
-			row+=2;
+		// while (row<SIZE){
+		// 	current_reply = replies.get(reply_index1);
+		// 	response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
+		// 	current_reply = replies.get(reply_index2);
+		// 	response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
+		// 	response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
+		// 	current_reply = replies.get(reply_index2);
+		// 	response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
+		// 	reply_index1+=2;
+		// 	reply_index2+=2;
+		// 	row+=2;
+		// }
+		int i = 1;
+		for (MatrixReply r : replies){
+			System.out.println("Reply "+i+": "+r.getC00()+" "+r.getC01()+" "+r.getC10()+" "+r.getC11());
+			i+=1;
 		}
 		return response;
 	}
