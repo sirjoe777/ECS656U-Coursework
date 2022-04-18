@@ -39,18 +39,20 @@ public class GRPCClientService {
 		 if(stub==null){
 			 System.out.println("stub is null");
 		 }
-		// MatrixReply A=stub.addBlock(MatrixRequest.newBuilder()
-		// 	.setA00(matrix1[0][0])
-		// 	.setA01(matrix1[0][1])
-		// 	.setA10(matrix1[1][0])
-		// 	.setA11(matrix1[1][1])
-		// 	.setB00(matrix2[0][0])
-		// 	.setB01(matrix1[0][1])
-		// 	.setB10(matrix1[1][0])
-		// 	.setB11(matrix1[1][1])
-		// 	.build());
-		// String resp= A.getC00()+" "+A.getC01()+"<br>"+A.getC10()+" "+A.getC11()+"\n";
-		// return resp;
+		 else{
+			MatrixReply A=stub.addBlock(MatrixRequest.newBuilder()
+			.setA00(matrix1[0][0])
+			.setA01(matrix1[0][1])
+			.setA10(matrix1[1][0])
+			.setA11(matrix1[1][1])
+			.setB00(matrix2[0][0])
+			.setB01(matrix1[0][1])
+			.setB10(matrix1[1][0])
+			.setB11(matrix1[1][1])
+			.build());
+		String resp= A.getC00()+" "+A.getC01()+"<br>"+A.getC10()+" "+A.getC11()+"\n";
+		return resp;
+		 }
 		return "";
     }
 
