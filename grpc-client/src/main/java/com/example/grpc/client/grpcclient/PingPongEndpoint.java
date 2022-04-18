@@ -36,6 +36,7 @@ public class PingPongEndpoint {
 		return grpcClientService.ping();
 	}
     @GetMapping("/add")
+	@ResponseBody
 	public String add() {
 		return grpcClientService.add();
 	}
