@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrices</title>
+</head>
+<body>
+    <h1>Matrices:</h1>
+    <br/>
+    <table>
+        <tr th:each="row,iterStat : ${M1}">
+            <td th:each="itm,iterStat : ${row}">
+                <p th:text="${itm}"></p>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr th:each="row,iterStat : ${M2}">
+            <td th:each="itm,iterStat : ${row}">
+                <p th:text="${itm}"></p>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    
+    <input type="submit" value="add" onclick="window.location='/add';" /> 
+    <input type="submit" value="multiply" onclick="window.location='/mult';" /> 
+    <input type="submit" value="add" onclick="window.location='/blockadd';" /> 
+    <input type="submit" value="multiply" onclick="window.location='/blockmult';" /> 
+    <br/>
+    <br/>
+    <input type="submit" value="go back" onclick="history.back();" />
+</body>
+</html>

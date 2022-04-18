@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,18 +22,20 @@ import java.io.IOException;
 import javax.naming.NamingException;
 
 @Controller
-public class PingPongEndpoint {    
+public class PingPongEndpoint {   
+	private String string_matrix1; 
+	private String string_matrix2; 
 	
 	GRPCClientService grpcClientService;    
 	@Autowired
-    	public PingPongEndpoint(GRPCClientService grpcClientService) {
-        	this.grpcClientService = grpcClientService;
-    	}    
+	public PingPongEndpoint(GRPCClientService grpcClientService) {
+		this.grpcClientService = grpcClientService;
+	}    
 	@GetMapping("/ping")
-    	public String ping() {
-        	return grpcClientService.ping();
-    	}
-        @GetMapping("/add")
+	public String ping() {
+		return grpcClientService.ping();
+	}
+    @GetMapping("/add")
 	public String add() {
 		return grpcClientService.add();
 	}
@@ -41,7 +44,6 @@ public class PingPongEndpoint {
 		return "uploadForm";
 	}
 	@PostMapping("/")
-	@ResponseBody
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
@@ -55,5 +57,15 @@ public class PingPongEndpoint {
 		String string_matrix1 = new String(file1.getBytes());
 		String string_matrix2 = new String(file2.getBytes());
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
+	}
+	@GetMapping("/display")
+	public String displayMatrices(Model mod) {
+		if (string_matrix1!=null && string_matrix2!=null){
+			mod.addAttribute("M1", string_matrix1);
+			mod.addAttribute("M2", string_matrix2);
+			return "display";
+		}
+		else return "uploadForm";
+		
 	}
 }
