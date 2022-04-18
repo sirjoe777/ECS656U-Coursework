@@ -8,11 +8,19 @@
     <h1>Matrices:</h1>
     <br/>
     <table>
-        <tr><td>Matrix 1:</td><div th:utext="${M1}"></div></tr>
+        <tr th:each="row,iterStat : ${A}">
+            <td th:each="itm,iterStat : ${row}">
+                <p th:text="${itm}"></p>
+            </td>
+        </tr>
     </table>
     <br/>
     <table>
-        <tr><td>Matrix 2:</td><div th:utext="${M2}"></div></tr>
+        <tr th:each="row,iterStat : ${B}">
+            <td th:each="itm,iterStat : ${row}">
+                <p th:text="${itm}"></p>
+            </td>
+        </tr>
     </table>
     <br/>
     
