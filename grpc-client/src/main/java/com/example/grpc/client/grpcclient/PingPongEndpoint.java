@@ -64,7 +64,7 @@ public class PingPongEndpoint {
 			if (string_matrix1==null){
 				string_matrix1 = new String(file.getBytes());
 			}
-			else if (string_matrix1==null){
+			else if (string_matrix2==null){
 				string_matrix2 = new String(file.getBytes());
 			}
 			else{
