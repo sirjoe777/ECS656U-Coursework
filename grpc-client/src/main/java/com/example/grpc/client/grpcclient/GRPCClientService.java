@@ -209,7 +209,7 @@ public class GRPCClientService {
 			current_reply = replies.get(reply_index1);
 			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
 			current_reply = replies.get(reply_index2);
-			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
+			response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
 			response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
 			current_reply = replies.get(reply_index2);
 			response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
