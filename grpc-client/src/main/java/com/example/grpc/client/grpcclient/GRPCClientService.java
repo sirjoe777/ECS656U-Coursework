@@ -39,6 +39,12 @@ public class GRPCClientService {
 		 if(stub==null){
 			 System.out.println("stub is null");
 		 }
+		 if(matrix1==null || matrix1.length==0){
+			System.out.println("matrix1 is the problem");
+		 }
+		 if(matrix2==null || matrix2.length==0){
+			System.out.println("matrix2 is the problem");
+		 }
 		 else{
 			MatrixReply A=stub.addBlock(MatrixRequest.newBuilder()
 			.setA00(matrix1[0][0])
@@ -46,9 +52,9 @@ public class GRPCClientService {
 			.setA10(matrix1[1][0])
 			.setA11(matrix1[1][1])
 			.setB00(matrix2[0][0])
-			.setB01(matrix1[0][1])
-			.setB10(matrix1[1][0])
-			.setB11(matrix1[1][1])
+			.setB01(matrix2[0][1])
+			.setB10(matrix2[1][0])
+			.setB11(matrix2[1][1])
 			.build());
 		String resp= A.getC00()+" "+A.getC01()+"<br>"+A.getC10()+" "+A.getC11()+"\n";
 		return resp;
