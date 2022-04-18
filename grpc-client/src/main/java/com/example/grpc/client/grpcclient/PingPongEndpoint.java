@@ -108,6 +108,8 @@ public class PingPongEndpoint {
 			}
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
+			printMatrix(matrix1);
+			printMatrix(matrix2);
 			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
 			return "";
 		}
