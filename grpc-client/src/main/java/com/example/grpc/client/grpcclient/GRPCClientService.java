@@ -205,22 +205,18 @@ public class GRPCClientService {
 		int reply_index2 = 1;
 		String response = "";
 		MatrixReply current_reply;
-		// while (row<SIZE){
-		// 	current_reply = replies.get(reply_index1);
-		// 	response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
-		// 	current_reply = replies.get(reply_index2);
-		// 	response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
-		// 	response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
-		// 	current_reply = replies.get(reply_index2);
-		// 	response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
-		// 	reply_index1+=2;
-		// 	reply_index2+=2;
-		// 	row+=2;
-		// }
-		int i = 1;
-		for (MatrixReply r : replies){
-			System.out.println("Reply "+i+": "+r.getC00()+" "+r.getC01()+" "+r.getC10()+" "+r.getC11());
-			i+=1;
+		while (row<SIZE){
+			current_reply = replies.get(reply_index1);
+			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
+			current_reply = replies.get(reply_index2);
+			response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
+			current_reply = replies.get(reply_index1);
+			response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
+			current_reply = replies.get(reply_index2);
+			response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
+			reply_index1+=2;
+			reply_index2+=2;
+			row+=2;
 		}
 		return response;
 	}
