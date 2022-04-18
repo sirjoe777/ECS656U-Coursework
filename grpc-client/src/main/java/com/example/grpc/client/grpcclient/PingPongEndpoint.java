@@ -41,7 +41,7 @@ public class PingPongEndpoint {
 	}
 	@GetMapping("/")
 	@ResponseBody
-	public String home (RedirectAttributes redirectAttributes) {
+	public String home () {
 		if (string_matrix1==null && string_matrix2==null){
 			return "Please upload two files!";
 		}
@@ -51,7 +51,7 @@ public class PingPongEndpoint {
 		else if (string_matrix2==null){
 			return "Please upload a file containing the second matrix!";
 		}
-		String response = "Successfully uploaded files!\nMatrix 1:\n"+string_matrix1+"\nMatrix 2:\n"+string_matrix2;
+		String response = "Successfully uploaded files!\nMatrix 1:"+"<br>"+string_matrix1.replaceAll("\n", "<br>")+"<br>"+"Matrix 2:"+"<br>"+string_matrix2.replaceAll("\n", "<br>");
 		return response;
 	}
 	@PostMapping("/")
