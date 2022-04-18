@@ -15,9 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Service
 public class GRPCClientService {
-	private int [][] matrix1;
-	private int [][] matrix2;
-	
+
     public String ping() {
         	ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9090)
                 .usePlaintext()
@@ -30,7 +28,7 @@ public class GRPCClientService {
 		channel.shutdown();        
 		return helloResponse.getPong();
     }
-    public String add(){
+    public String add(int [][] matrix1, int [][] matrix2){
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost",9090)
 		.usePlaintext()
 		.build();
@@ -62,99 +60,99 @@ public class GRPCClientService {
 		return "";
     }
 
-	public String processMatrices(String string_matrix1, String string_matrix2, RedirectAttributes redirectAttributes){
-		try{
-			String [] rows1 = string_matrix1.split("\n");
-			String [] rows2 = string_matrix2.split("\n");
-			//Check size is a power of 2
-			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
-				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-				return "redirect:/";
-			}
-			//Check if provided matrices are square
-			boolean isSquare1 = check_square_matrix(rows1);
-			boolean isSquare2 = check_square_matrix(rows2);
-			if (!isSquare1 || !isSquare2){
-				redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
-				return "redirect:/";
-			}
-			//We know matrices are square, so we can check if they have same size by simply checking
-			//that the numner of rows is the same.
-			if (rows1.length!=rows2.length){
-				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-				return "redirect:/";
-			}
-			matrix1 = buildMatrix(rows1);
-			matrix2 = buildMatrix(rows2);
-			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
-			return "redirect:/";
-		}
-		catch(Exception e){
-			System.out.println("Exception in processMatrices");
-			System.out.println(e.getMessage());
-		}
-		return "redirect:/";
-	}
+	// public String processMatrices(String string_matrix1, String string_matrix2, RedirectAttributes redirectAttributes){
+	// 	try{
+	// 		String [] rows1 = string_matrix1.split("\n");
+	// 		String [] rows2 = string_matrix2.split("\n");
+	// 		//Check size is a power of 2
+	// 		if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
+	// 			redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
+	// 			return "redirect:/";
+	// 		}
+	// 		//Check if provided matrices are square
+	// 		boolean isSquare1 = check_square_matrix(rows1);
+	// 		boolean isSquare2 = check_square_matrix(rows2);
+	// 		if (!isSquare1 || !isSquare2){
+	// 			redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
+	// 			return "redirect:/";
+	// 		}
+	// 		//We know matrices are square, so we can check if they have same size by simply checking
+	// 		//that the numner of rows is the same.
+	// 		if (rows1.length!=rows2.length){
+	// 			redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
+	// 			return "redirect:/";
+	// 		}
+	// 		matrix1 = buildMatrix(rows1);
+	// 		matrix2 = buildMatrix(rows2);
+	// 		//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
+	// 		return "redirect:/";
+	// 	}
+	// 	catch(Exception e){
+	// 		System.out.println("Exception in processMatrices");
+	// 		System.out.println(e.getMessage());
+	// 	}
+	// 	return "redirect:/";
+	// }
 
-	private void printMatrix(int [][] matrix){
-		for (int row=0; row<matrix.length; row++){
-			for(int column=0; column<matrix[row].length; column++){
-				System.out.print(matrix[row][column]);
-				System.out.print(" ");
-			}
-			System.out.println();
-		}
-	}
+	// private void printMatrix(int [][] matrix){
+	// 	for (int row=0; row<matrix.length; row++){
+	// 		for(int column=0; column<matrix[row].length; column++){
+	// 			System.out.print(matrix[row][column]);
+	// 			System.out.print(" ");
+	// 		}
+	// 		System.out.println();
+	// 	}
+	// }
 
-	//Taken from https://www.geeksforgeeks.org/java-program-to-find-whether-a-no-is-power-of-two/
-	private boolean checkPowerOfTwo(int n)
-    { 
-        while (n != 1) {
-            if (n % 2 != 0)
-                return false;
-            n = n / 2;
-        }
-        return true;
-    }
+	// //Taken from https://www.geeksforgeeks.org/java-program-to-find-whether-a-no-is-power-of-two/
+	// private boolean checkPowerOfTwo(int n)
+    // { 
+    //     while (n != 1) {
+    //         if (n % 2 != 0)
+    //             return false;
+    //         n = n / 2;
+    //     }
+    //     return true;
+    // }
 
-	private boolean check_square_matrix(String[] rows){
-		for (String row : rows){
-			try{
-				String [] row_entries = row.split(",");
-				if (row_entries.length!=rows.length){
-					return false;
-				}
-			}
-			catch(Exception e){
-				System.out.println("Exception in check_square_matrix");
-				System.out.println(e.getMessage());
-			}
-		}
-		return true;
-	}
+	// private boolean check_square_matrix(String[] rows){
+	// 	for (String row : rows){
+	// 		try{
+	// 			String [] row_entries = row.split(",");
+	// 			if (row_entries.length!=rows.length){
+	// 				return false;
+	// 			}
+	// 		}
+	// 		catch(Exception e){
+	// 			System.out.println("Exception in check_square_matrix");
+	// 			System.out.println(e.getMessage());
+	// 		}
+	// 	}
+	// 	return true;
+	// }
 
-	private int[][] buildMatrix(String[] rows){
-		final int SIZE = rows.length;
-		int [][] matrix = new int[SIZE][SIZE];
-		try{
-			for (int row=0; row<SIZE; row++){
+	// private int[][] buildMatrix(String[] rows){
+	// 	final int SIZE = rows.length;
+	// 	int [][] matrix = new int[SIZE][SIZE];
+	// 	try{
+	// 		for (int row=0; row<SIZE; row++){
 
-				String [] row_entries = rows[row].replaceAll("[^,0-9]","").split(",");
-				for (int column=0; column<SIZE; column++){
-					matrix[row][column] = Integer.parseInt(row_entries[column]);
-				}
-			}
-		}
-		catch(Exception e){
-			System.out.println("Exception in buildMatrix");
-			System.out.println(e.toString());
-		}
-		return matrix;
-	}
+	// 			String [] row_entries = rows[row].replaceAll("[^,0-9]","").split(",");
+	// 			for (int column=0; column<SIZE; column++){
+	// 				matrix[row][column] = Integer.parseInt(row_entries[column]);
+	// 			}
+	// 		}
+	// 	}
+	// 	catch(Exception e){
+	// 		System.out.println("Exception in buildMatrix");
+	// 		System.out.println(e.toString());
+	// 	}
+	// 	return matrix;
+	// }
 
-	private void printArray(String[] array){
-		for (String element : array){
-			System.out.println(element);
-		}
-	}
+	// private void printArray(String[] array){
+	// 	for (String element : array){
+	// 		System.out.println(element);
+	// 	}
+	// }
 }
