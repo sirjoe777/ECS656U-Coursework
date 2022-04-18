@@ -199,8 +199,8 @@ public class GRPCClientService {
 	}
 
 	private String getResponse (ArrayList<MatrixReply> replies){
-		final int SIZE = (int)2*Math.sqrt(replies.size());
-		int row = 0;
+		final double SIZE = 2*Math.sqrt(replies.size());
+		double row = 0;
 		int reply_index1 = 0;
 		int reply_index2 = 1;
 		String response = "";
