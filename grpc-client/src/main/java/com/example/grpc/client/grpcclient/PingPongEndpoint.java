@@ -65,12 +65,16 @@ public class PingPongEndpoint {
 			Integer[][] test2 = new Integer[2][2];
 			test1[0][0]=0;
 			test1[0][1]=0;
+			test1[0][2]=0;
 			test1[1][0]=0;
 			test1[1][1]=0;
+			test1[1][2]=0;
 			test2[0][0]=0;
 			test2[0][1]=0;
+			test2[0][2]=0;
 			test2[1][0]=0;
 			test2[1][1]=0;
+			test2[1][2]=0;
 			mod.addAttribute("M1", test1);
 			mod.addAttribute("M2", test2);
 			return "display";
