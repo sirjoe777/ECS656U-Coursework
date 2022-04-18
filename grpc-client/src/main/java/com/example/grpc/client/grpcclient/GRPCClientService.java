@@ -37,7 +37,7 @@ public class GRPCClientService {
 		return helloResponse.getPong();
     }
     public String add(){
-		String [] ips = {"10.128.0.7","10.128.0.8","10.128.0.9","10.128.0.10","10.128.0.11","10.128.0.12","10.128.0.13","10.128.0.14"};
+		String [] ips = {"10.128.0.7","10.128.0.8","10.128.0.16","10.128.0.10","10.128.0.11","10.128.0.12","10.128.0.13","10.128.0.14"};
 		for (int i=0; i<ips.length; i++){
 			ManagedChannel channel = ManagedChannelBuilder.forAddress(ips[i],9090)
 			.usePlaintext()
@@ -46,6 +46,37 @@ public class GRPCClientService {
 			= MatrixServiceGrpc.newBlockingStub(channel);
 			stubs[i] = stub;
 		}
+
+		ArrayList<MatrixReply> replies = new ArrayList<>();
+		final int MAX_SERVER = 7;
+		int current_server = 0;
+		for (int i=0; i<blocks_1.size(); i++){
+			int [][] current_block1 = blocks_1.get(i);
+			int [][] current_block2 = blocks_2.get(i);
+			MatrixReply current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
+			.setA00(current_block1[0][0])
+			.setA01(current_block1[0][1])
+			.setA10(current_block1[1][0])
+			.setA11(current_block1[1][1])
+			.setB00(current_block2[0][0])
+			.setB01(current_block2[0][1])
+			.setB10(current_block2[1][0])
+			.setB11(current_block2[1][1])
+			.build());
+			replies.add(current_reply);
+			current_server++;
+			if(current_server==8) current_server=0; 
+		}
+		for (int i=0; i<)
+
+
+		String resp= A1.getC00()+" "+A1.getC01()+" "+A2.getC00()+" "+A2.getC01()+"<br>"+
+					 A1.getC10()+" "+A1.getC11()+" "+A2.getC10()+" "+A2.getC11()+"<br>"+
+					 A3.getC00()+" "+A3.getC01()+" "+A4.getC00()+" "+A4.getC01()+"<br>"+
+					 A3.getC10()+" "+A3.getC11()+" "+A4.getC10()+" "+A4.getC11()+"<br>";
+		return resp;
+
+
 
 		int[][] b1_1 = blocks_1.get(0);
 		int[][] b1_2 = blocks_1.get(1);
@@ -76,7 +107,7 @@ public class GRPCClientService {
 			.setB10(b2_2[1][0])
 			.setB11(b2_2[1][1])
 			.build());
-		MatrixReply A3=stubs[4].addBlock(MatrixRequest.newBuilder()
+		MatrixReply A3=stubs[2].addBlock(MatrixRequest.newBuilder()
 			.setA00(b1_3[0][0])
 			.setA01(b1_3[0][1])
 			.setA10(b1_3[1][0])
@@ -100,7 +131,7 @@ public class GRPCClientService {
 		String resp= A1.getC00()+" "+A1.getC01()+" "+A2.getC00()+" "+A2.getC01()+"<br>"+
 					 A1.getC10()+" "+A1.getC11()+" "+A2.getC10()+" "+A2.getC11()+"<br>"+
 					 A3.getC00()+" "+A3.getC01()+" "+A4.getC00()+" "+A4.getC01()+"<br>"+
-					 A3.getC10()+" "+A3.getC11()+" "+A3.getC10()+" "+A3.getC11()+"<br>";
+					 A3.getC10()+" "+A3.getC11()+" "+A4.getC10()+" "+A4.getC11()+"<br>";
 		return resp;
     }
 
@@ -202,47 +233,31 @@ public class GRPCClientService {
 		}
 	}
 
-	private ArrayList<int[][]> createBlocks(int matrix[][]) {
+	private ArrayList<int[][]> createBlocks(int matrix[][]){
+		final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
+		int row = 0;
+		int col = 0;
+		int [][] current_block = new int[2][2];
+        int ii=0;
+        int jj=0;
 		ArrayList<int[][]> result = new ArrayList<>();
-		int stride = 2;
-		int size = matrix.length;
-		//Process all rows
-		for (int row = 0; row < size - stride + 1; row += 2) {
-			//Process all columns
-			for (int column = 0; column < size - stride + 1; column += 2) {
-				int block[][] = new int[2][2];
-				//Use boolean flags to make sure we don't process same entries multiple times
-				boolean[][]  processed = new boolean[2][2];
-				//Process rows of current sub-matrix
-				for (int i = row; i < stride + row; i++) {
-					//Keep a counter for the number of iterations
-					int iter = 0;
-					//Process columns of current sub-matrix
-					for (int j = column; j < stride + column; j++) {
-						if (iter == 0 && !processed[0][0]) {
-							processed[0][0] = true;
-							block[0][0] = matrix[i][j];
-							iter++;
-						}
-						else if (iter == 0 && !processed[1][0]) {
-							processed[1][0] = true;
-							block[1][0] = matrix[i][j];
-							iter++;
-						}
-						else if (iter == 1 && !processed[0][1]) {
-							processed[0][1] = true;
-							block[0][1] = matrix[i][j];
-							iter++;
-						}
-						else if (iter == 1 && !processed[1][1]) {
-							processed[1][1] = true;
-							block[1][1] = matrix[i][j];
-							iter++;
-						}
+		while (row<N_BLOCKS){
+			while (col<N_BLOCKS){
+				for(int i=row; i<row+2; i++){
+					for (int j=col; j<col+2; j++){
+						current_block[ii][jj] = matrix[i][j];
+                        jj++;
 					}
+                    ii++;
+                    jj=0;
 				}
-				result.add(block);
+                ii=0;
+				col = col+2;
+				result.add(current_block);
+                current_block = new int[2][2];
 			}
+			row = row+2;
+			col = 0;
 		}
 		return result;
 	}
