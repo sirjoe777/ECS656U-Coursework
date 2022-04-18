@@ -84,7 +84,10 @@ public class PingPongEndpoint {
 			// test2[2][2]=0;
 			// mod.addAttribute("M1", test1);
 			// mod.addAttribute("M2", test2);
-			return string_matrix1+"\n"+string_matrix2;
+			String response = "Successfully uploaded"+"<br>"+"Matrix 1"+"<br>"+string_matrix1.replaceAll("\n", "<br>")
+							  .replaceAll(",", " ")+"<br>"+"Matrix 2"+"<br>"+string_matrix2.replaceAll("\n", "<br>")
+							  .replaceAll(",", " ");
+			return response;
 		}
 		else return "uploadForm";
 		
