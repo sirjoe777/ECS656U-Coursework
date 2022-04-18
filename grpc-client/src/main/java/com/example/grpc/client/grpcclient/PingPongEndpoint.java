@@ -51,7 +51,8 @@ public class PingPongEndpoint {
 		else if (string_matrix2==null){
 			return "Please upload a file containing the second matrix!";
 		}
-		return "Successfully uploaded files!";
+		String response = "Successfully uploaded files!\nMatrix 1:\n"+string_matrix1+"\nMatrix 2:\n"+string_matrix2;
+		return response;
 	}
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
