@@ -40,6 +40,11 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
+	@GetMapping("/mult")
+	@ResponseBody
+	public String mult() {
+		return grpcClientService.mult();
+	}
 	//Redirect to upload form
 	@GetMapping("/")
 	public String upload () {

@@ -38,15 +38,7 @@ public class GRPCClientService {
 		return helloResponse.getPong();
     }
     public String add(){
-		for (int i=0; i<IPS.length; i++){
-			ManagedChannel channel = ManagedChannelBuilder.forAddress(IPS[i],9090)
-			.usePlaintext()
-			.build();
-			MatrixServiceGrpc.MatrixServiceBlockingStub stub
-			= MatrixServiceGrpc.newBlockingStub(channel);
-			stubs[i] = stub;
-		}
-
+		initializeStubs();
 		ArrayList<MatrixReply> replies = new ArrayList<>();
 		final int MAX_SERVER = 7;
 		int current_server = 0;
@@ -54,6 +46,31 @@ public class GRPCClientService {
 			int [][] current_block1 = blocks_1.get(i);
 			int [][] current_block2 = blocks_2.get(i);
 			MatrixReply current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
+			.setA00(current_block1[0][0])
+			.setA01(current_block1[0][1])
+			.setA10(current_block1[1][0])
+			.setA11(current_block1[1][1])
+			.setB00(current_block2[0][0])
+			.setB01(current_block2[0][1])
+			.setB10(current_block2[1][0])
+			.setB11(current_block2[1][1])
+			.build());
+			replies.add(current_reply);
+			current_server++;
+			if(current_server==8) current_server=0; 
+		}
+		String resp = getResponse(replies);
+		return resp;
+    }
+	public String mult(){
+		initializeStubs();
+		ArrayList<MatrixReply> replies = new ArrayList<>();
+		final int MAX_SERVER = 7;
+		int current_server = 0;
+		for (int i=0; i<blocks_1.size(); i++){
+			int [][] current_block1 = blocks_1.get(i);
+			int [][] current_block2 = blocks_2.get(i);
+			MatrixReply current_reply = stubs[current_server].multiplyBlock(MatrixRequest.newBuilder()
 			.setA00(current_block1[0][0])
 			.setA01(current_block1[0][1])
 			.setA10(current_block1[1][0])
@@ -219,5 +236,16 @@ public class GRPCClientService {
 			row+=2;
 		}
 		return response;
+	}
+
+	private void initializeStubs(){
+		for (int i=0; i<IPS.length; i++){
+			ManagedChannel channel = ManagedChannelBuilder.forAddress(IPS[i],9090)
+			.usePlaintext()
+			.build();
+			MatrixServiceGrpc.MatrixServiceBlockingStub stub
+			= MatrixServiceGrpc.newBlockingStub(channel);
+			stubs[i] = stub;
+		}
 	}
 }
