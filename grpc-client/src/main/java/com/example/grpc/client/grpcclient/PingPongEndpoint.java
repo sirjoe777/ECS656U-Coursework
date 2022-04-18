@@ -42,16 +42,13 @@ public class PingPongEndpoint {
 	@GetMapping("/")
 	public String home (RedirectAttributes redirectAttributes) {
 		if (string_matrix1==null && string_matrix2==null){
-			redirectAttributes.addFlashAttribute("message", "Please upload two files!");
-			return "redirect:/";
+			return "Please upload two files!";
 		}
 		else if (string_matrix1==null){
-			redirectAttributes.addFlashAttribute("message", "Please upload a file containing the first matrix!");
-			return "redirect:/";
+			return "Please upload a file containing the first matrix!";
 		}
 		else if (string_matrix2==null){
-			redirectAttributes.addFlashAttribute("message", "Please upload a file containing the second matrix!");
-			return "redirect:/";
+			return "Please upload a file containing the second matrix!";
 		}
 		return "Successfully uploaded files!";
 	}
