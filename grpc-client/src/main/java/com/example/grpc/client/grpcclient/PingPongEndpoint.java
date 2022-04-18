@@ -64,10 +64,13 @@ public class PingPongEndpoint {
 			if (string_matrix1==null){
 				string_matrix1 = new String(file.getBytes());
 			}
-			else{
+			else if (string_matrix1==null){
 				string_matrix2 = new String(file.getBytes());
 			}
+			else{
+				return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
+			}
 		}
-		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
+		return "redirect:/";
 	}
 }
