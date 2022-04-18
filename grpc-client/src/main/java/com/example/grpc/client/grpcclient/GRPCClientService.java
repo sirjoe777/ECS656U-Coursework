@@ -76,7 +76,7 @@ public class GRPCClientService {
 			.setB10(b2_2[1][0])
 			.setB11(b2_2[1][1])
 			.build());
-		MatrixReply A3=stubs[2].addBlock(MatrixRequest.newBuilder()
+		MatrixReply A3=stubs[4].addBlock(MatrixRequest.newBuilder()
 			.setA00(b1_3[0][0])
 			.setA01(b1_3[0][1])
 			.setA10(b1_3[1][0])
