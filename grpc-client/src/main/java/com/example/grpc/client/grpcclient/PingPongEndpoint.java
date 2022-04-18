@@ -64,11 +64,9 @@ public class PingPongEndpoint {
 		return response;
 	}
 	@PostMapping("/")
-	@ResponseBody
-	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException{
+	public void handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException{
 		if (file.getBytes().length==0){
-			//redirectAttributes.addFlashAttribute("message", "Please make sure the file is not empty!");
-			return "Please make sure the file is not empty!";
+			redirectAttributes.addFlashAttribute("message", "Please make sure the file is not empty!");
 		}
 		else{
 			if (string_matrix1==null){
@@ -83,37 +81,37 @@ public class PingPongEndpoint {
 					String [] rows2 = string_matrix2.split("\n");
 					//Check size is a power of 2
 					if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
-						//redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-						return "Please make sure matrices' size is a power of 2.";
+						redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
+					
 					}
 					//Check if provided matrices are square
 					boolean isSquare1 = check_square_matrix(rows1);
 					boolean isSquare2 = check_square_matrix(rows2);
 					if (!isSquare1 || !isSquare2){
-						//redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
-						return "Please make sure you provide square matrices.";
+						redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
+						
 					}
 					//We know matrices are square, so we can check if they have same size by simply checking
 					//that the numner of rows is the same.
 					if (rows1.length!=rows2.length){
-						//redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-						return "Please make sure matrices have the same size.";
+						redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
+						
 					}
 					matrix1 = buildMatrix(rows1);
 					matrix2 = buildMatrix(rows2);
 					printMatrix(matrix1);
 					printMatrix(matrix2);
-					//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
-					return "";
+					redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
+					
 				}
 				catch(Exception e){
 					System.out.println("Exception in processMatrices");
 					System.out.println(e.getMessage());
 				}
-				return "";
+				
 			}
 		}
-		return "";
+		
 	}
 
 	private void printMatrix(int [][] matrix){
