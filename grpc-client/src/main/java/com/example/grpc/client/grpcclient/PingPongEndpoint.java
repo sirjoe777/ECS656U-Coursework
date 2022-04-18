@@ -40,6 +40,7 @@ public class PingPongEndpoint {
 		return grpcClientService.add();
 	}
 	@GetMapping("/")
+	@ResponseBody
 	public String home (RedirectAttributes redirectAttributes) {
 		if (string_matrix1==null && string_matrix2==null){
 			return "Please upload two files!";
