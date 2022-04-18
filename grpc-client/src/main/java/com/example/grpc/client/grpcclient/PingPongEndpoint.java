@@ -40,10 +40,12 @@ public class PingPongEndpoint {
 	public String add() {
 		return grpcClientService.add();
 	}
+	//Redirect to upload form
 	@GetMapping("/")
-	public String home () {
+	public String upload () {
 		return "uploadForm";
 	}
+	//Handle file upload by calling function in ClientService to process matrices
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
@@ -59,6 +61,7 @@ public class PingPongEndpoint {
 		string_matrix2 = new String(file2.getBytes());
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
+	//Display uploaded matrices
 	@GetMapping("/display")
 	@ResponseBody
 	public String displayMatrices(Model mod) {

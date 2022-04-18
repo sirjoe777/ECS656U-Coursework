@@ -4,6 +4,9 @@ import com.example.grpc.server.grpcserver.PingRequest;
 import com.example.grpc.server.grpcserver.PongResponse;
 import com.example.grpc.server.grpcserver.PingPongServiceGrpc;
 import com.example.grpc.server.grpcserver.MatrixRequest;
+
+import java.util.ArrayList;
+
 import com.example.grpc.server.grpcserver.MatrixReply;
 import com.example.grpc.server.grpcserver.MatrixServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -17,6 +20,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class GRPCClientService {
 	private int [][] matrix1;
 	private int [][] matrix2;
+	private MatrixServiceGrpc.MatrixServiceBlockingStub [] stubs = new MatrixServiceGrpc.MatrixServiceBlockingStub [8];
+	private ArrayList<int[][]> blocks_1 = new ArrayList<>();
+	private ArrayList<int[][]> blocks_2 = new ArrayList<>();
 	
     public String ping() {
         	ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9090)
@@ -31,22 +37,70 @@ public class GRPCClientService {
 		return helloResponse.getPong();
     }
     public String add(){
-		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost",9090)
-		.usePlaintext()
-		.build();
-		MatrixServiceGrpc.MatrixServiceBlockingStub stub
-		 = MatrixServiceGrpc.newBlockingStub(channel);
-		MatrixReply A=stub.addBlock(MatrixRequest.newBuilder()
-			.setA00(matrix1[0][0])
-			.setA01(matrix1[0][1])
-			.setA10(matrix1[1][0])
-			.setA11(matrix1[1][1])
-			.setB00(matrix2[0][0])
-			.setB01(matrix2[0][1])
-			.setB10(matrix2[1][0])
-			.setB11(matrix2[1][1])
+		String [] ips = {"10.128.0.7","10.128.0.8","10.128.0.9","10.128.0.10","10.128.0.11","10.128.0.12","10.128.0.13","10.128.0.14"};
+		for (int i=0; i<ips.length; i++){
+			ManagedChannel channel = ManagedChannelBuilder.forAddress(ips[i],9090)
+			.usePlaintext()
+			.build();
+			MatrixServiceGrpc.MatrixServiceBlockingStub stub
+			= MatrixServiceGrpc.newBlockingStub(channel);
+			stubs[i] = stub;
+		}
+
+		int[][] b1_1 = blocks_1.get(0);
+		int[][] b1_2 = blocks_1.get(1);
+		int[][] b1_3 = blocks_1.get(2);
+		int[][] b1_4 = blocks_1.get(3);
+
+		int[][] b2_1 = blocks_2.get(0);
+		int[][] b2_2 = blocks_2.get(1);
+		int[][] b2_3 = blocks_2.get(2);
+		int[][] b2_4 = blocks_2.get(3);
+		MatrixReply A1=stubs[0].addBlock(MatrixRequest.newBuilder()
+			.setA00(b1_1[0][0])
+			.setA01(b1_1[0][1])
+			.setA10(b1_1[1][0])
+			.setA11(b1_1[1][1])
+			.setB00(b2_1[0][0])
+			.setB01(b2_1[0][1])
+			.setB10(b2_1[1][0])
+			.setB11(b2_1[1][1])
 			.build());
-		String resp= A.getC00()+" "+A.getC01()+"<br>"+A.getC10()+" "+A.getC11()+"\n";
+		MatrixReply A2=stubs[1].addBlock(MatrixRequest.newBuilder()
+			.setA00(b1_2[0][0])
+			.setA01(b1_2[0][1])
+			.setA10(b1_2[1][0])
+			.setA11(b1_2[1][1])
+			.setB00(b2_2[0][0])
+			.setB01(b2_2[0][1])
+			.setB10(b2_2[1][0])
+			.setB11(b2_2[1][1])
+			.build());
+		MatrixReply A3=stubs[2].addBlock(MatrixRequest.newBuilder()
+			.setA00(b1_3[0][0])
+			.setA01(b1_3[0][1])
+			.setA10(b1_3[1][0])
+			.setA11(b1_3[1][1])
+			.setB00(b2_3[0][0])
+			.setB01(b2_3[0][1])
+			.setB10(b2_3[1][0])
+			.setB11(b2_3[1][1])
+			.build());
+		MatrixReply A4=stubs[3].addBlock(MatrixRequest.newBuilder()
+			.setA00(b1_4[0][0])
+			.setA01(b1_4[0][1])
+			.setA10(b1_4[1][0])
+			.setA11(b1_4[1][1])
+			.setB00(b2_4[0][0])
+			.setB01(b2_4[0][1])
+			.setB10(b2_4[1][0])
+			.setB11(b2_4[1][1])
+			.build());
+
+		String resp= A1.getC00()+" "+A1.getC01()+" "+A2.getC00()+" "+A2.getC01()+"<br>"+
+					 A1.getC10()+" "+A1.getC11()+" "+A2.getC10()+" "+A2.getC11()+"<br>"+
+					 A3.getC00()+" "+A3.getC01()+" "+A4.getC00()+" "+A4.getC01()+"<br>"+
+					 A3.getC10()+" "+A3.getC11()+" "+A3.getC10()+" "+A3.getC11()+"<br>";
 		return resp;
     }
 
@@ -74,6 +128,8 @@ public class GRPCClientService {
 			}
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
+			blocks_1 = createBlocks(matrix1);
+			blocks_2 = createBlocks(matrix2);
 			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
 			return "redirect:/display";
 		}
@@ -144,5 +200,50 @@ public class GRPCClientService {
 		for (String element : array){
 			System.out.println(element);
 		}
+	}
+
+	private ArrayList<int[][]> createBlocks(int matrix[][]) {
+		ArrayList<int[][]> result = new ArrayList<>();
+		int stride = 2;
+		int size = matrix.length;
+		//Process all rows
+		for (int row = 0; row < size - stride + 1; row += 2) {
+			//Process all columns
+			for (int column = 0; column < size - stride + 1; column += 2) {
+				int block[][] = new int[2][2];
+				//Use boolean flags to make sure we don't process same entries multiple times
+				boolean[][]  processed = new boolean[2][2];
+				//Process rows of current sub-matrix
+				for (int i = row; i < stride + row; i++) {
+					//Keep a counter for the number of iterations
+					int iter = 0;
+					//Process columns of current sub-matrix
+					for (int j = column; j < stride + column; j++) {
+						if (iter == 0 && !processed[0][0]) {
+							processed[0][0] = true;
+							block[0][0] = matrix[i][j];
+							iter++;
+						}
+						else if (iter == 0 && !processed[1][0]) {
+							processed[1][0] = true;
+							block[1][0] = matrix[i][j];
+							iter++;
+						}
+						else if (iter == 1 && !processed[0][1]) {
+							processed[0][1] = true;
+							block[0][1] = matrix[i][j];
+							iter++;
+						}
+						else if (iter == 1 && !processed[1][1]) {
+							processed[1][1] = true;
+							block[1][1] = matrix[i][j];
+							iter++;
+						}
+					}
+				}
+				result.add(block);
+			}
+		}
+		return result;
 	}
 }
