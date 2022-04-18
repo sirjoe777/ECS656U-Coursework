@@ -51,22 +51,23 @@ public class PingPongEndpoint {
 		else if (string_matrix2==null){
 			return "Please upload a file containing the second matrix!";
 		}
-		String response = "Successfully uploaded files!\nMatrix 1:"+"<br>"+string_matrix1.replaceAll("\n", "<br>")+"<br>"+"Matrix 2:"+"<br>"+string_matrix2.replaceAll("\n", "<br>");
+		String response = "Successfully uploaded files!"+"<br>"+"Matrix 1:"+"<br>"+string_matrix1.replaceAll("\n", "<br>")+"<br>"+"Matrix 2:"+"<br>"+string_matrix2.replaceAll("\n", "<br>");
 		return response;
 	}
 	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
-		//Make sure a file has been uploaded
-		if (file1.getBytes().length==0){
-			redirectAttributes.addFlashAttribute("message", "Please make sure the first file is not empty!");
+	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException{
+		if (file.getBytes().length==0){
+			redirectAttributes.addFlashAttribute("message", "Please make sure the file is not empty!");
 			return "redirect:/";
-		} 
-		if (file2.getBytes().length==0){
-			redirectAttributes.addFlashAttribute("message", "Please make sure the second file is not empty!");
-			return "redirect:/";
-		} 
-		string_matrix1 = new String(file1.getBytes());
-		string_matrix2 = new String(file2.getBytes());
+		}
+		else{
+			if (string_matrix1==null){
+				string_matrix1 = new String(file.getBytes());
+			}
+			else{
+				string_matrix2 = new String(file.getBytes());
+			}
+		}
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
 }
