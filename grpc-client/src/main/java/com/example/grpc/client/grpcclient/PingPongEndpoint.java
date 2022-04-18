@@ -78,44 +78,40 @@ public class PingPongEndpoint {
 				string_matrix2 = new String(file.getBytes());
 			}
 			else{
-				return processMatrices(string_matrix1, string_matrix2, redirectAttributes);
+				try{
+					String [] rows1 = string_matrix1.split("\n");
+					String [] rows2 = string_matrix2.split("\n");
+					//Check size is a power of 2
+					if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
+						//redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
+						return "Please make sure matrices' size is a power of 2.";
+					}
+					//Check if provided matrices are square
+					boolean isSquare1 = check_square_matrix(rows1);
+					boolean isSquare2 = check_square_matrix(rows2);
+					if (!isSquare1 || !isSquare2){
+						//redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
+						return "Please make sure you provide square matrices.";
+					}
+					//We know matrices are square, so we can check if they have same size by simply checking
+					//that the numner of rows is the same.
+					if (rows1.length!=rows2.length){
+						//redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
+						return "Please make sure matrices have the same size.";
+					}
+					matrix1 = buildMatrix(rows1);
+					matrix2 = buildMatrix(rows2);
+					printMatrix(matrix1);
+					printMatrix(matrix2);
+					//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
+					return "";
+				}
+				catch(Exception e){
+					System.out.println("Exception in processMatrices");
+					System.out.println(e.getMessage());
+				}
+				return "";
 			}
-		}
-		return "";
-	}
-
-	public String processMatrices(String string_matrix1, String string_matrix2, RedirectAttributes redirectAttributes){
-		try{
-			String [] rows1 = string_matrix1.split("\n");
-			String [] rows2 = string_matrix2.split("\n");
-			//Check size is a power of 2
-			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
-				//redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-				return "Please make sure matrices' size is a power of 2.";
-			}
-			//Check if provided matrices are square
-			boolean isSquare1 = check_square_matrix(rows1);
-			boolean isSquare2 = check_square_matrix(rows2);
-			if (!isSquare1 || !isSquare2){
-				//redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
-				return "Please make sure you provide square matrices.";
-			}
-			//We know matrices are square, so we can check if they have same size by simply checking
-			//that the numner of rows is the same.
-			if (rows1.length!=rows2.length){
-				//redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-				return "Please make sure matrices have the same size.";
-			}
-			matrix1 = buildMatrix(rows1);
-			matrix2 = buildMatrix(rows2);
-			printMatrix(matrix1);
-			printMatrix(matrix2);
-			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
-			return "";
-		}
-		catch(Exception e){
-			System.out.println("Exception in processMatrices");
-			System.out.println(e.getMessage());
 		}
 		return "";
 	}
