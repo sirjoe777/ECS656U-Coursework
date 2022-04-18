@@ -63,34 +63,12 @@ public class PingPongEndpoint {
 	@ResponseBody
 	public String displayMatrices(Model mod) {
 		if (string_matrix1!=null && string_matrix2!=null){
-			// Integer[][] test1 = new Integer[3][3];
-			// Integer[][] test2 = new Integer[3][3];
-			// test1[0][0]=0;
-			// test1[0][1]=0;
-			// test1[0][2]=0;
-			// test1[1][0]=0;
-			// test1[1][1]=0;
-			// test1[1][2]=0;
-			// test1[2][0]=0;
-			// test1[2][1]=0;
-			// test1[2][2]=0;
-			// test2[0][0]=0;
-			// test2[0][1]=0;
-			// test2[0][2]=0;
-			// test2[1][0]=0;
-			// test2[1][1]=0;
-			// test2[1][2]=0;
-			// test2[2][0]=0;
-			// test2[2][1]=0;
-			// test2[2][2]=0;
-			// mod.addAttribute("M1", test1);
-			// mod.addAttribute("M2", test2);
 			String response = "Successfully uploaded"+"<br>"+"Matrix 1"+"<br>"+string_matrix1.replaceAll("\n", "<br>")
 							  .replaceAll(",", " ")+"<br>"+"Matrix 2"+"<br>"+string_matrix2.replaceAll("\n", "<br>")
 							  .replaceAll(",", " ");
 			return response;
 		}
-		else return "uploadForm";
+		else return "Please make sure you have uploaded files containing matrices!";
 		
 	}
 }
