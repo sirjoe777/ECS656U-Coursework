@@ -54,8 +54,8 @@ public class PingPongEndpoint {
 			redirectAttributes.addFlashAttribute("message", "Please make sure the second file is not empty!");
 			return "redirect:/";
 		} 
-		String string_matrix1 = new String(file1.getBytes());
-		String string_matrix2 = new String(file2.getBytes());
+		string_matrix1 = new String(file1.getBytes());
+		string_matrix2 = new String(file2.getBytes());
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
 	@GetMapping("/display")
