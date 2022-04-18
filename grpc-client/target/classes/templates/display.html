@@ -8,7 +8,7 @@
     <h1>Matrices:</h1>
     <br/>
     <table>
-        <tr th:each="row,iterStat : ${A}">
+        <tr th:each="row,iterStat : ${M1}">
             <td th:each="itm,iterStat : ${row}">
                 <p th:text="${itm}"></p>
             </td>
@@ -16,7 +16,7 @@
     </table>
     <br/>
     <table>
-        <tr th:each="row,iterStat : ${B}">
+        <tr th:each="row,iterStat : ${M2}">
             <td th:each="itm,iterStat : ${row}">
                 <p th:text="${itm}"></p>
             </td>
