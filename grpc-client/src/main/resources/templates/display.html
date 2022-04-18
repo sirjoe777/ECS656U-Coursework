@@ -7,21 +7,11 @@
     <h1>Successfully uploaded:</h1>
     <br/>
     <table>
-        <div>Matrix 1</div>
-        <tr th:each="row,iterStat : ${M1}">
-            <td th:each="itm,iterStat : ${row}">
-                <p th:text="${itm}"></p>
-            </td>
-        </tr>
+        <div>Matrix 1 ${M1}</div>
     </table>
     <br/>
     <table>
-        <div>Matrix 2</div>
-        <tr th:each="row,iterStat : ${M2}">
-            <td th:each="itm,iterStat : ${row}">
-                <p th:text="${itm}"></p>
-            </td>
-        </tr>
+        <div>Matrix 2 ${M2}</div>
     </table>
     <br/>
     
