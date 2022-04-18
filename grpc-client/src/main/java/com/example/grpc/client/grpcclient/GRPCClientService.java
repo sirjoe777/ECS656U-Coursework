@@ -67,71 +67,7 @@ public class GRPCClientService {
 			current_server++;
 			if(current_server==8) current_server=0; 
 		}
-		for (int i=0; i<)
-
-
-		String resp= A1.getC00()+" "+A1.getC01()+" "+A2.getC00()+" "+A2.getC01()+"<br>"+
-					 A1.getC10()+" "+A1.getC11()+" "+A2.getC10()+" "+A2.getC11()+"<br>"+
-					 A3.getC00()+" "+A3.getC01()+" "+A4.getC00()+" "+A4.getC01()+"<br>"+
-					 A3.getC10()+" "+A3.getC11()+" "+A4.getC10()+" "+A4.getC11()+"<br>";
-		return resp;
-
-
-
-		int[][] b1_1 = blocks_1.get(0);
-		int[][] b1_2 = blocks_1.get(1);
-		int[][] b1_3 = blocks_1.get(2);
-		int[][] b1_4 = blocks_1.get(3);
-
-		int[][] b2_1 = blocks_2.get(0);
-		int[][] b2_2 = blocks_2.get(1);
-		int[][] b2_3 = blocks_2.get(2);
-		int[][] b2_4 = blocks_2.get(3);
-		MatrixReply A1=stubs[0].addBlock(MatrixRequest.newBuilder()
-			.setA00(b1_1[0][0])
-			.setA01(b1_1[0][1])
-			.setA10(b1_1[1][0])
-			.setA11(b1_1[1][1])
-			.setB00(b2_1[0][0])
-			.setB01(b2_1[0][1])
-			.setB10(b2_1[1][0])
-			.setB11(b2_1[1][1])
-			.build());
-		MatrixReply A2=stubs[1].addBlock(MatrixRequest.newBuilder()
-			.setA00(b1_2[0][0])
-			.setA01(b1_2[0][1])
-			.setA10(b1_2[1][0])
-			.setA11(b1_2[1][1])
-			.setB00(b2_2[0][0])
-			.setB01(b2_2[0][1])
-			.setB10(b2_2[1][0])
-			.setB11(b2_2[1][1])
-			.build());
-		MatrixReply A3=stubs[2].addBlock(MatrixRequest.newBuilder()
-			.setA00(b1_3[0][0])
-			.setA01(b1_3[0][1])
-			.setA10(b1_3[1][0])
-			.setA11(b1_3[1][1])
-			.setB00(b2_3[0][0])
-			.setB01(b2_3[0][1])
-			.setB10(b2_3[1][0])
-			.setB11(b2_3[1][1])
-			.build());
-		MatrixReply A4=stubs[3].addBlock(MatrixRequest.newBuilder()
-			.setA00(b1_4[0][0])
-			.setA01(b1_4[0][1])
-			.setA10(b1_4[1][0])
-			.setA11(b1_4[1][1])
-			.setB00(b2_4[0][0])
-			.setB01(b2_4[0][1])
-			.setB10(b2_4[1][0])
-			.setB11(b2_4[1][1])
-			.build());
-
-		String resp= A1.getC00()+" "+A1.getC01()+" "+A2.getC00()+" "+A2.getC01()+"<br>"+
-					 A1.getC10()+" "+A1.getC11()+" "+A2.getC10()+" "+A2.getC11()+"<br>"+
-					 A3.getC00()+" "+A3.getC01()+" "+A4.getC00()+" "+A4.getC01()+"<br>"+
-					 A3.getC10()+" "+A3.getC11()+" "+A4.getC10()+" "+A4.getC11()+"<br>";
+		String resp = getResponse(replies);
 		return resp;
     }
 
@@ -260,5 +196,27 @@ public class GRPCClientService {
 			col = 0;
 		}
 		return result;
+	}
+
+	private String getResponse (ArrayList<MatrixReply> replies){
+		final int SIZE = (int)2*Math.sqrt(replies.size());
+		int row = 0;
+		int reply_index1 = 0;
+		int reply_index2 = 1;
+		String response = "";
+		MatrixReply current_reply;
+		while (row<SIZE){
+			current_reply = replies.get(reply_index1);
+			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
+			current_reply = replies.get(reply_index2);
+			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
+			response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
+			current_reply = replies.get(reply_index2);
+			response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
+			reply_index1+=2;
+			reply_index2+=2;
+			row+=2;
+		}
+		return response;
 	}
 }
