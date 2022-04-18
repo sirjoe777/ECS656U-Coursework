@@ -40,6 +40,12 @@ public class PingPongEndpoint {
     @GetMapping("/add")
 	@ResponseBody
 	public String add() {
+		if (matrix1==null){
+			System.out.println("M1 is null");
+		}
+		else if (matrix2==null){
+			System.out.println("M2 is null");
+		}
 		return grpcClientService.add(matrix1, matrix2);
 	}
 	@GetMapping("/")
@@ -58,10 +64,9 @@ public class PingPongEndpoint {
 		return response;
 	}
 	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException{
+	public void handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException{
 		if (file.getBytes().length==0){
 			redirectAttributes.addFlashAttribute("message", "Please make sure the file is not empty!");
-			return "redirect:/";
 		}
 		else{
 			if (string_matrix1==null){
@@ -71,44 +76,38 @@ public class PingPongEndpoint {
 				string_matrix2 = new String(file.getBytes());
 			}
 			else{
-				return processMatrices(string_matrix1, string_matrix2, redirectAttributes);
+				processMatrices(redirectAttributes);
 			}
 		}
-		return "redirect:/";
 	}
 
-	public String processMatrices(String string_matrix1, String string_matrix2, RedirectAttributes redirectAttributes){
+	public void processMatrices(RedirectAttributes redirectAttributes){
 		try{
 			String [] rows1 = string_matrix1.split("\n");
 			String [] rows2 = string_matrix2.split("\n");
 			//Check size is a power of 2
 			if (!checkPowerOfTwo(rows1.length) || !checkPowerOfTwo(rows2.length)){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
-				return "redirect:/";
 			}
 			//Check if provided matrices are square
 			boolean isSquare1 = check_square_matrix(rows1);
 			boolean isSquare2 = check_square_matrix(rows2);
 			if (!isSquare1 || !isSquare2){
 				redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
-				return "redirect:/";
 			}
 			//We know matrices are square, so we can check if they have same size by simply checking
 			//that the numner of rows is the same.
 			if (rows1.length!=rows2.length){
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-				return "redirect:/";
 			}
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
 			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
-			return "redirect:/";
 		}
 		catch(Exception e){
 			System.out.println("Exception in processMatrices");
 			System.out.println(e.getMessage());
 		}
-		return "redirect:/";
 	}
 
 	private void printMatrix(int [][] matrix){
