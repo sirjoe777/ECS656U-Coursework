@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Service
 public class GRPCClientService {
+	private final String[] IPS = {"10.128.0.7","10.128.0.8","10.128.0.16","10.128.0.10","10.128.0.11","10.128.0.12","10.128.0.13","10.128.0.17"};
 	private int [][] matrix1;
 	private int [][] matrix2;
 	private MatrixServiceGrpc.MatrixServiceBlockingStub [] stubs = new MatrixServiceGrpc.MatrixServiceBlockingStub [8];
@@ -37,9 +38,8 @@ public class GRPCClientService {
 		return helloResponse.getPong();
     }
     public String add(){
-		String [] ips = {"10.128.0.7","10.128.0.8","10.128.0.16","10.128.0.10","10.128.0.11","10.128.0.12","10.128.0.13","10.128.0.14"};
-		for (int i=0; i<ips.length; i++){
-			ManagedChannel channel = ManagedChannelBuilder.forAddress(ips[i],9090)
+		for (int i=0; i<IPS.length; i++){
+			ManagedChannel channel = ManagedChannelBuilder.forAddress(IPS[i],9090)
 			.usePlaintext()
 			.build();
 			MatrixServiceGrpc.MatrixServiceBlockingStub stub
