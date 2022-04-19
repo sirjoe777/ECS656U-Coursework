@@ -127,7 +127,7 @@ public class GRPCClientService {
 					.setB10(mult_replies.get(j).getC10())
 					.setB11(mult_replies.get(j).getC11())
 					.build());
-					
+					j--;
 				}
 			}
 			final_replies.add((prev_reply)); 
@@ -152,6 +152,7 @@ public class GRPCClientService {
 		// .setB11(current_reply.getC11())
 		// .build());
 		String resp = getResponse(final_replies);
+		System.out.println(final_replies.size());
 		return resp;
     }
 
