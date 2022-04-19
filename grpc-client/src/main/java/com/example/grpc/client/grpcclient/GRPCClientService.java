@@ -324,24 +324,25 @@ public class GRPCClientService {
 		}
 	}
 
-	private void getResponse(ArrayList<MatrixReply> replies){
+	private String getResponse(ArrayList<MatrixReply> replies){
 		final int N_BLOCKS = (int) Math.pow((replies.size()/2), 2);
 		int row = 0;
 		int col = 0;
         int bigger_matrix_row = 0;
         int bigger_matrix_col = 0;
-        int [][][][] blocks = new int[N_BLOCKS][N_BLOCKS][2][2];
-		int [][] current_block = new int[2][2];
-        int ii=0;
-        int jj=0;
+		String result = "";
 		while (row<replies.size()){
 			while (col<replies.size()){
-				System.out.println(replies.getC00()+" "+replies.getC01()+" "+replies.getC10()+" "+replies.getC11()+"<br>");
+				result+=(replies.getC00()+" "+replies.getC01()+" "+replies.getC10()+" "+replies.getC11()+"<br>");
                 bigger_matrix_col++;
+				col = col+2;
 			}
+			col=0;
+			row = row+2;
             bigger_matrix_row++;
             bigger_matrix_col=0;
 		}
+		return result;
 	}
 
 
