@@ -324,28 +324,52 @@ public class GRPCClientService {
 		}
 	}
 
-	private String getResponse (ArrayList<MatrixReply> replies){
-		final double SIZE = 2*Math.sqrt(replies.size());
-		double row = 0;
-		int reply_index1 = 0;
-		int reply_index2 = 1;
-		String response = "";
-		MatrixReply current_reply;
-		while (row<SIZE){
-			current_reply = replies.get(reply_index1);
-			response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
-			current_reply = replies.get(reply_index2);
-			response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
-			current_reply = replies.get(reply_index1);
-			response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
-			current_reply = replies.get(reply_index2);
-			response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
-			reply_index1+=2;
-			reply_index2+=2;
-			row+=2;
-		}
-		return response;
+	private String assembleBack(ArrayList<MatrixReply> replies){
+		String res = "";
+        int length = (int)Math.sqrt((double)replies.size());
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++){
+                MatrixReply cur = resps.get(i+j);
+                res = res + cur.getC00() +" "+ cur.getC01() + " ";
+            }
+            res = res.strip();
+            res = res + "<br>";
+            for (int j = 0; j < length; j++){
+                MatrixReply cur = resps.get(i+j);
+                res = res + cur.getC10() +" "+ cur.getC11() + " ";
+            }
+            res = res.strip();
+            if (i == length-1){
+                res = res + "\n";
+            } else {res = res + "<br>";}
+            
+        }
+        return res;
 	}
+
+	// private String getResponse (ArrayList<MatrixReply> replies){
+	// 	final double SIZE = 2*Math.sqrt(replies.size());
+	// 	double row = 0;
+	// 	int reply_index1 = 0;
+	// 	int reply_index2 = 1;
+	// 	String response = "";
+	// 	MatrixReply current_reply;
+	// 	while (row<SIZE){
+	// 		current_reply = replies.get(reply_index1);
+	// 		response = response + current_reply.getC00()+" "+current_reply.getC01()+" ";
+	// 		current_reply = replies.get(reply_index2);
+	// 		response = response + current_reply.getC00()+" "+current_reply.getC01()+"<br>";
+	// 		current_reply = replies.get(reply_index1);
+	// 		response = response + current_reply.getC10()+" "+current_reply.getC11()+" ";
+	// 		current_reply = replies.get(reply_index2);
+	// 		response = response + current_reply.getC10()+" "+current_reply.getC11()+"<br>";
+	// 		reply_index1+=2;
+	// 		reply_index2+=2;
+	// 		row+=2;
+	// 	}
+	// 	return response;
+	// }
 
 	private void initializeStubs(){
 		for (int i=0; i<IPS.length; i++){
