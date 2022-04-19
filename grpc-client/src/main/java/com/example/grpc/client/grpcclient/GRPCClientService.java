@@ -65,7 +65,7 @@ public class GRPCClientService {
 
 	public String mult(float deadline){
 		initializeStubs();
-		int max_servers = 8;
+		int max_servers = -1;
 		long deadline_nano = (long)((Math.pow(10,9))*deadline);
 		if(matrix1.length==2){
 			MatrixReply reply = stubs[0].multiplyBlock(MatrixRequest.newBuilder()
@@ -109,6 +109,9 @@ public class GRPCClientService {
 						max_servers = (int)(((start-end)*number_of_operations)/deadline_nano);
 						if (max_servers<1) max_servers=1;
 						else if (max_servers>7) max_servers = 8;
+					}
+					else{
+						max_servers=8;
 					}
 					System.out.println(max_servers);
 					mult_replies.add(current_mult);
