@@ -89,7 +89,7 @@ public class GRPCClientService {
 					.setB10(current_block2[1][0])
 					.setB11(current_block2[1][1])
 					.build());
-					mult_replies.add(current_reply);
+					mult_replies.add(current_mult);
 					current_server++;
 					if (current_server==MAX_SERVER) current_server=0;
 				}
