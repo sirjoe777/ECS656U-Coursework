@@ -102,7 +102,7 @@ public class GRPCClientService {
 		int blocks_per_row =rows/2;
 		int row_n=1;
 		for (int i = 0; i < mult_replies.size(); i+=blocks_per_row) {
-			for (int j=i;j<blocks_per_row*row_n;j+=2) {
+			for (int j=i;j<blocks_per_row;j+=2) {
 				if (j==i) {
 					prev_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(mult_replies.get(j).getC00())
