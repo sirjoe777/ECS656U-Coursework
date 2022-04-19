@@ -331,10 +331,10 @@ public class GRPCClientService {
 		for (int i = 0; i < size; i +=2) {
 			for (int j = 0; j <size ; j += 2) {
 
-				replies[i][j] = replies.get(block_index).getC00();
-				replies[i][j + 1] = replies.get(block_index).getC01();
-				replies[i + 1][j] = replies.get(block_index).getC10();
-				replies[i + 1][j + 1] = replies.get(block_index).getC11();
+				responses_as_matrix[i][j] = replies.get(block_index).getC00();
+				responses_as_matrix[i][j + 1] = replies.get(block_index).getC01();
+				responses_as_matrix[i + 1][j] = replies.get(block_index).getC10();
+				responses_as_matrix[i + 1][j + 1] = replies.get(block_index).getC11();
 				block_index++;
 			}
 		}
