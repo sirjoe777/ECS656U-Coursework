@@ -324,26 +324,52 @@ public class GRPCClientService {
 		}
 	}
 
-	private String getResponse(ArrayList<MatrixReply> replies){
-		final int N_BLOCKS = (int) Math.pow((replies.size()/2), 2);
-		int row = 0;
-		int col = 0;
-        int bigger_matrix_row = 0;
-        int bigger_matrix_col = 0;
-		String result = "";
-		while (row<replies.size()){
-			while (col<replies.size()){
-				result+=(replies.getC00()+" "+replies.getC01()+" "+replies.getC10()+" "+replies.getC11()+"<br>");
-                bigger_matrix_col++;
-				col = col+2;
+	private String getResponse(ArrayList<MatrixReply> replies) {
+		int size = matrix1.length;
+		int [][] responses_as_matrix = new int[size][size];
+		int block_index = 0;
+		for (int i = 0; i < size; i +=2) {
+			for (int j = 0; j <size ; j += 2) {
+
+				replies[i][j] = replies.get(block_index).getC00();
+				replies[i][j + 1] = replies.get(block_index).getC01();
+				replies[i + 1][j] = replies.get(block_index).getC10();
+				replies[i + 1][j + 1] = replies.get(block_index).getC11();
+				block_index++;
 			}
-			col=0;
-			row = row+2;
-            bigger_matrix_row++;
-            bigger_matrix_col=0;
 		}
-		return result;
+		String response = "";
+		for (int i=0; i<responses_as_matrix.length; i++)
+    	{
+    		for (int j=0; j<responses_as_matrix[i].length;j++)
+    		{
+    			response+=(responses_as_matrix[i][j]+" ");
+    		}
+    		response+=("<br>");
+    	}
+		return response;
 	}
+
+	// private String getResponse(ArrayList<MatrixReply> replies){
+	// 	final int N_BLOCKS = (int) Math.pow((replies.size()/2), 2);
+	// 	int row = 0;
+	// 	int col = 0;
+    //     int bigger_matrix_row = 0;
+    //     int bigger_matrix_col = 0;
+	// 	String result = "";
+	// 	while (row<replies.size()){
+	// 		while (col<replies.size()){
+	// 			result+=(replies.get()getC00()+" "+replies.getC01()+" "+replies.getC10()+" "+replies.getC11()+"<br>");
+    //             bigger_matrix_col++;
+	// 			col = col+2;
+	// 		}
+	// 		col=0;
+	// 		row = row+2;
+    //         bigger_matrix_row++;
+    //         bigger_matrix_col=0;
+	// 	}
+	// 	return result;
+	// }
 
 
 	// private String getResponse(ArrayList<MatrixReply> replies){
