@@ -114,7 +114,7 @@ public class GRPCClientService {
 		for (int i = 0; i < mult_replies.size(); i+=size) {
 			for (int j=i;j<size*row;j+=2) {
 				if (j==i) {
-					prev_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
+					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(mult_replies.get(j).getC00())
 					.setA01(mult_replies.get(j).getC01())
 					.setA10(mult_replies.get(j).getC10())
@@ -125,11 +125,11 @@ public class GRPCClientService {
 					.setB11(mult_replies.get(j+1).getC11())
 					.build());
 				} else {
-					prev_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
-					.setA00(prev_reply.getC00())
-					.setA01(prev_reply.getC01())
-					.setA10(prev_reply.getC10())
-					.setA11(prev_reply.getC11())
+					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
+					.setA00(current_reply.getC00())
+					.setA01(current_reply.getC01())
+					.setA10(current_reply.getC10())
+					.setA11(current_reply.getC11())
 					.setB00(mult_replies.get(j).getC00())
 					.setB01(mult_replies.get(j).getC01())
 					.setB10(mult_replies.get(j).getC10())
@@ -138,7 +138,7 @@ public class GRPCClientService {
 					j--;
 				}
 			}
-			final_replies.add((prev_reply)); 
+			final_replies.add(current_reply); 
 			row++;
 			current_server++;
 			if (current_server==MAX_SERVER) {
