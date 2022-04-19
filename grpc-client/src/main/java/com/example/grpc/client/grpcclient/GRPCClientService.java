@@ -63,8 +63,10 @@ public class GRPCClientService {
 		return resp;
     }
 
-	public String mult(){
+	public String mult(float deadline){
 		initializeStubs();
+		int max_servers = 8;
+		long deadline_nano = (long)((Math.pow(10,9))*deadline);
 		if(matrix1.length==2){
 			MatrixReply reply = stubs[0].multiplyBlock(MatrixRequest.newBuilder()
 								.setA00(matrix1[0][0])
@@ -80,7 +82,6 @@ public class GRPCClientService {
 		}
 		ArrayList<MatrixReply> final_replies = new ArrayList<>();
 		ArrayList<MatrixReply> mult_replies = new ArrayList<>();
-		final int MAX_SERVER = 7;
 		int current_server = 0;
 		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
 		int[][][][] blocks1 = createBlocks2(matrix1);
@@ -91,6 +92,7 @@ public class GRPCClientService {
 				for (int k=0; k<size; k++){
 					int [][] current_block1 = blocks1[i][k];
 					int [][] current_block2 = blocks2[k][j];
+					long start = System.nanoTime();
 					MatrixReply current_mult = stubs[current_server].multiplyBlock(MatrixRequest.newBuilder()
 					.setA00(current_block1[0][0])
 					.setA01(current_block1[0][1])
@@ -101,9 +103,17 @@ public class GRPCClientService {
 					.setB10(current_block2[1][0])
 					.setB11(current_block2[1][1])
 					.build());
+					if (deadline<0){
+						int number_of_operations = (int)Math.pow(size,3)-1;
+						long end = System.nanoTime();
+						max_servers = (int)(((start-end)*number_of_operations)/deadline_nano);
+						if (max_servers<1) max_servers=1;
+						else if (max_servers>7) max_servers = 8;
+					}
+					System.out.println(max_servers);
 					mult_replies.add(current_mult);
 					current_server++;
-					if (current_server==MAX_SERVER) current_server=0;
+					if (current_server==max_servers) current_server=0;
 				}
 			}
 		}
@@ -139,7 +149,7 @@ public class GRPCClientService {
 			final_replies.add(current_reply); 
 			row++;
 			current_server++;
-			if (current_server==MAX_SERVER) {
+			if (current_server==max_servers) {
 				current_server=0;
 			}
 		}

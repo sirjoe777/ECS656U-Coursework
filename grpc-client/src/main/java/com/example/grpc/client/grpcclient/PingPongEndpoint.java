@@ -25,7 +25,7 @@ import javax.naming.NamingException;
 public class PingPongEndpoint {   
 	private String string_matrix1; 
 	private String string_matrix2; 
-	private int deadline;
+	private float deadline;
 
 	
 	GRPCClientService grpcClientService;    
@@ -45,7 +45,7 @@ public class PingPongEndpoint {
 	@GetMapping("/mult")
 	@ResponseBody
 	public String mult() {
-		return grpcClientService.mult();
+		return grpcClientService.mult(deadline);
 	}
 	//Redirect to upload form
 	@GetMapping("/")
@@ -66,7 +66,7 @@ public class PingPongEndpoint {
 		} 
 		if (string_deadline.length()!=0){
 			try{
-				deadline = Integer.parseInt(string_deadline);
+				deadline = Float.parseFloat(string_deadline);
 			}
 			catch(Exception e){
 				redirectAttributes.addFlashAttribute("message", "Please make sure the deadline is an integer!");
