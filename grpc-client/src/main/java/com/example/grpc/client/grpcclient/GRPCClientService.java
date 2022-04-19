@@ -330,13 +330,13 @@ public class GRPCClientService {
 
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++){
-                MatrixReply cur = resps.get(i+j);
+                MatrixReply cur = replies.get(i+j);
                 res = res + cur.getC00() +" "+ cur.getC01() + " ";
             }
             res = res.strip();
             res = res + "<br>";
             for (int j = 0; j < length; j++){
-                MatrixReply cur = resps.get(i+j);
+                MatrixReply cur = replies.get(i+j);
                 res = res + cur.getC10() +" "+ cur.getC11() + " ";
             }
             res = res.strip();
