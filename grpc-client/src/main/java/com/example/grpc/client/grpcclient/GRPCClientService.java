@@ -106,10 +106,13 @@ public class GRPCClientService {
 					if (deadline>0 && max_servers==-1){
 						int number_of_operations = (int)Math.pow(size,3)-1;
 						long end = System.nanoTime();
-						max_servers = (int)(((start-end)*number_of_operations)/deadline_nano);
+						long footprint = start-end;
+						max_servers = (int)((footprint*number_of_operations)/deadline_nano);
+						System.out.println("Deadline: "+deadline_nano);
+						System.out.println("Footprint: "+footprint);
+						System.out.println("Servers: "+max_servers);
 						if (max_servers<1) max_servers=1;
 						else if (max_servers>7) max_servers = 8;
-						System.out.println("Servers: "+max_servers);
 					}
 					else{
 						max_servers=8;
