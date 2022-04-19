@@ -71,7 +71,7 @@ public class GRPCClientService {
 		int current_server_add = 1;
 		int[][][][] blocks1 = createBlocks2(matrix1);
 		int[][][][] blocks2 = createBlocks2(matrix2);
-		int size = blocks1.length;
+		int size = 2;
 		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
 		int [][] accumulator = new int[2][2];
 		for (int i=0; i<size; ++i){
@@ -99,6 +99,7 @@ public class GRPCClientService {
 					.setB10(current_reply.getC10())
 					.setB11(current_reply.getC11())
 					.build());
+
 					replies.add(current_reply);
 					current_server_mult++;
 					current_server_add++;
