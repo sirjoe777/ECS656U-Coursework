@@ -317,6 +317,7 @@ public class GRPCClientService {
 		}
 		catch(Exception e){
 			System.out.println("createblocks\n"+e.getMessage());
+			return null;
 		}
 	}
 
