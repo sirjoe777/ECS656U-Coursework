@@ -254,7 +254,7 @@ public class GRPCClientService {
 		}
 	}
 
-	private static int[][][][] createBlocks2(int matrix[][]){
+	private int[][][][] createBlocks2(int matrix[][]){
 		final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
         //int [][] b = new int[N_BLOCKS*2][N_BLOCKS*2];
 		int row = 0;
@@ -324,29 +324,50 @@ public class GRPCClientService {
 		}
 	}
 
-	private String getResponse(ArrayList<MatrixReply> replies){
-		String res = "";
-        int length = (int)Math.sqrt((double)replies.size());
-
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++){
-                MatrixReply cur = replies.get(i+j);
-                res = res + cur.getC00() +" "+ cur.getC01() + " ";
-            }
-            res = res.strip();
-            res = res + "<br>";
-            for (int j = 0; j < length; j++){
-                MatrixReply cur = replies.get(i+j);
-                res = res + cur.getC10() +" "+ cur.getC11() + " ";
-            }
-            res = res.strip();
-            if (i == length-1){
-                res = res + "\n";
-            } else {res = res + "<br>";}
-            
-        }
-        return res;
+	private void getResponse(ArrayList<MatrixReply> replies){
+		final int N_BLOCKS = (int) Math.pow((replies.size()/2), 2);
+		int row = 0;
+		int col = 0;
+        int bigger_matrix_row = 0;
+        int bigger_matrix_col = 0;
+        int [][][][] blocks = new int[N_BLOCKS][N_BLOCKS][2][2];
+		int [][] current_block = new int[2][2];
+        int ii=0;
+        int jj=0;
+		while (row<replies.size()){
+			while (col<replies.size()){
+				System.out.println(replies.getC00()+" "+replies.getC01()+" "+replies.getC10()+" "+replies.getC11()+"<br>");
+                bigger_matrix_col++;
+			}
+            bigger_matrix_row++;
+            bigger_matrix_col=0;
+		}
 	}
+
+
+	// private String getResponse(ArrayList<MatrixReply> replies){
+	// 	String res = "";
+    //     int length = (int)Math.sqrt((double)replies.size());
+
+    //     for (int i = 0; i < length; i++) {
+    //         for (int j = 0; j < length; j++){
+    //             MatrixReply cur = replies.get(i+j);
+    //             res = res + cur.getC00() +" "+ cur.getC01() + " ";
+    //         }
+    //         res = res.strip();
+    //         res = res + "<br>";
+    //         for (int j = 0; j < length; j++){
+    //             MatrixReply cur = replies.get(i+j);
+    //             res = res + cur.getC10() +" "+ cur.getC11() + " ";
+    //         }
+    //         res = res.strip();
+    //         if (i == length-1){
+    //             res = res + "\n";
+    //         } else {res = res + "<br>";}
+            
+    //     }
+    //     return res;
+	// }
 
 	// private String getResponse (ArrayList<MatrixReply> replies){
 	// 	final double SIZE = 2*Math.sqrt(replies.size());
