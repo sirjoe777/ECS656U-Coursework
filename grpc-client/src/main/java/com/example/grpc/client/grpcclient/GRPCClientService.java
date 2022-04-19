@@ -287,32 +287,37 @@ public class GRPCClientService {
 	}
 
 	private ArrayList<int[][]> createBlocks(int matrix[][]){
-		final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
-		int row = 0;
-		int col = 0;
-		int [][] current_block = new int[2][2];
-        int ii=0;
-        int jj=0;
-		ArrayList<int[][]> result = new ArrayList<>();
-		while (row<N_BLOCKS){
-			while (col<N_BLOCKS){
-				for(int i=row; i<row+2; i++){
-					for (int j=col; j<col+2; j++){
-						current_block[ii][jj] = matrix[i][j];
-                        jj++;
+		try{
+			final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
+			int row = 0;
+			int col = 0;
+			int [][] current_block = new int[2][2];
+			int ii=0;
+			int jj=0;
+			ArrayList<int[][]> result = new ArrayList<>();
+			while (row<N_BLOCKS){
+				while (col<N_BLOCKS){
+					for(int i=row; i<row+2; i++){
+						for (int j=col; j<col+2; j++){
+							current_block[ii][jj] = matrix[i][j];
+							jj++;
+						}
+						ii++;
+						jj=0;
 					}
-                    ii++;
-                    jj=0;
+					ii=0;
+					col = col+2;
+					result.add(current_block);
+					current_block = new int[2][2];
 				}
-                ii=0;
-				col = col+2;
-				result.add(current_block);
-                current_block = new int[2][2];
+				row = row+2;
+				col = 0;
 			}
-			row = row+2;
-			col = 0;
+			return result;
 		}
-		return result;
+		catch(Exception e){
+			System.out.println("createblocks\n"+e.getMessage());
+		}
 	}
 
 	private String getResponse (ArrayList<MatrixReply> replies){
