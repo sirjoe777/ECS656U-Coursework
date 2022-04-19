@@ -78,6 +78,7 @@ public class PingPongEndpoint {
 		}
 		string_matrix1 = new String(file1.getBytes());
 		string_matrix2 = new String(file2.getBytes());
+		System.out.println(deadline);
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
 	//Display uploaded matrices
