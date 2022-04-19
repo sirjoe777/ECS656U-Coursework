@@ -62,27 +62,50 @@ public class GRPCClientService {
 		String resp = getResponse(replies);
 		return resp;
     }
+
 	public String mult(){
 		initializeStubs();
 		ArrayList<MatrixReply> replies = new ArrayList<>();
 		final int MAX_SERVER = 7;
-		int current_server = 0;
-		for (int i=0; i<blocks_1.size(); i++){
-			int [][] current_block1 = blocks_1.get(i);
-			int [][] current_block2 = blocks_2.get(i);
-			MatrixReply current_reply = stubs[current_server].multiplyBlock(MatrixRequest.newBuilder()
-			.setA00(current_block1[0][0])
-			.setA01(current_block1[0][1])
-			.setA10(current_block1[1][0])
-			.setA11(current_block1[1][1])
-			.setB00(current_block2[0][0])
-			.setB01(current_block2[0][1])
-			.setB10(current_block2[1][0])
-			.setB11(current_block2[1][1])
-			.build());
-			replies.add(current_reply);
-			current_server++;
-			if(current_server==8) current_server=0; 
+		int current_server_mult = 0;
+		int current_server_add = 1;
+		int[][][][] blocks1 = createBlocks2(matrix1);
+		int[][][][] blocks2 = createBlocks2(matrix2);
+		int size = blocks1.length;
+		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
+		int [][] accumulator = new int[2][2];
+		for (int i=0; i<size; ++i){
+			for (int j=0; j<size; ++j){
+				for (int k=0; k<size; ++k){
+					int [][] current_block1 = blocks1[i][k];
+					int [][] current_block2 = blocks2[k][j];
+					MatrixReply current_mult = stubs[current_server_mult].multiplyBlock(MatrixRequest.newBuilder()
+					.setA00(current_block1[0][0])
+					.setA01(current_block1[0][1])
+					.setA10(current_block1[1][0])
+					.setA11(current_block1[1][1])
+					.setB00(current_block2[0][0])
+					.setB01(current_block2[0][1])
+					.setB10(current_block2[1][0])
+					.setB11(current_block2[1][1])
+					.build());
+					current_reply = stubs[current_server_add].addBlock(MatrixRequest.newBuilder()
+					.setA00(current_mult.getC00())
+					.setA01(current_mult.getC01())
+					.setA10(current_mult.getC10())
+					.setA11(current_mult.getC11())
+					.setB00(current_reply.getC00())
+					.setB01(current_reply.getC01())
+					.setB10(current_reply.getC10())
+					.setB11(current_reply.getC11())
+					.build());
+					replies.add(current_reply);
+					current_server_mult++;
+					current_server_add++;
+					if (current_server_add==8) current_server_add=0;
+					if (current_server_mult==8) current_server_mult=0;
+				}
+			}
 		}
 		String resp = getResponse(replies);
 		return resp;
@@ -184,6 +207,41 @@ public class GRPCClientService {
 		for (String element : array){
 			System.out.println(element);
 		}
+	}
+
+	private static int[][][][] createBlocks2(int matrix[][]){
+		final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
+        //int [][] b = new int[N_BLOCKS*2][N_BLOCKS*2];
+		int row = 0;
+		int col = 0;
+        int bigger_matrix_row = 0;
+        int bigger_matrix_col = 0;
+        int [][][][] blocks = new int[N_BLOCKS][N_BLOCKS][2][2];
+		int [][] current_block = new int[2][2];
+        int ii=0;
+        int jj=0;
+		while (row<N_BLOCKS){
+			while (col<N_BLOCKS){
+				for(int i=row; i<row+2; i++){
+					for (int j=col; j<col+2; j++){
+						current_block[ii][jj] = matrix[i][j];
+                        jj++;
+					}
+                    ii++;
+                    jj=0;
+				}
+                ii=0;
+				col = col+2;
+                blocks[bigger_matrix_row][bigger_matrix_col] = current_block;
+                bigger_matrix_col++;
+                current_block = new int[2][2];
+			}
+            bigger_matrix_row++;
+            bigger_matrix_col=0;
+			row = row+2;
+			col = 0;
+		}
+		return blocks;
 	}
 
 	private ArrayList<int[][]> createBlocks(int matrix[][]){
