@@ -99,7 +99,7 @@ public class GRPCClientService {
 		MatrixReply prev_reply = null;
 
 		int rows=size*2;
-		int blocks_per_row =rows/2;
+		int blocks_per_row=rows/2;
 
 		
 		int row_n=1;
@@ -127,7 +127,7 @@ public class GRPCClientService {
 					.setB10(mult_replies.get(j).getC10())
 					.setB11(mult_replies.get(j).getC11())
 					.build());
-					j--;
+					
 				}
 			}
 			final_replies.add((prev_reply)); 
