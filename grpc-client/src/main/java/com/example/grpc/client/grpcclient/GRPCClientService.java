@@ -82,6 +82,7 @@ public class GRPCClientService {
 		ArrayList<MatrixReply> mult_replies = new ArrayList<>();
 		final int MAX_SERVER = 7;
 		int current_server = 0;
+		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
 		int[][][][] blocks1 = createBlocks2(matrix1);
 		int[][][][] blocks2 = createBlocks2(matrix2);
 		int size = (int)Math.sqrt(blocks1.length);
@@ -107,9 +108,6 @@ public class GRPCClientService {
 			}
 		}
 		current_server=0;
-		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
-		// int rows=size*2;
-		// int blocks_per_row=rows/2;
 		int row=1;
 		for (int i = 0; i < mult_replies.size(); i+=size) {
 			for (int j=i;j<size*row;j+=2) {

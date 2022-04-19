@@ -25,6 +25,8 @@ import javax.naming.NamingException;
 public class PingPongEndpoint {   
 	private String string_matrix1; 
 	private String string_matrix2; 
+	private int deadline;
+
 	
 	GRPCClientService grpcClientService;    
 	@Autowired
@@ -52,7 +54,7 @@ public class PingPongEndpoint {
 	}
 	//Handle file upload by calling function in ClientService to process matrices
 	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, RedirectAttributes redirectAttributes) throws IOException{
+	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, @RequestParam("deadline") String string_deadline, RedirectAttributes redirectAttributes) throws IOException{
 		//Make sure a file has been uploaded
 		if (file1.getBytes().length==0){
 			redirectAttributes.addFlashAttribute("message", "Please make sure the first file is not empty!");
@@ -62,6 +64,18 @@ public class PingPongEndpoint {
 			redirectAttributes.addFlashAttribute("message", "Please make sure the second file is not empty!");
 			return "redirect:/";
 		} 
+		if (string_deadline.length()!=0){
+			try{
+				deadline = Integer.parseInt(string_deadline);
+			}
+			catch(Exception e){
+				redirectAttributes.addFlashAttribute("message", "Please make sure the deadline is an integer!");
+				return "redirect:/";
+			}
+		}
+		else{
+			deadline = -1;
+		}
 		string_matrix1 = new String(file1.getBytes());
 		string_matrix2 = new String(file2.getBytes());
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
