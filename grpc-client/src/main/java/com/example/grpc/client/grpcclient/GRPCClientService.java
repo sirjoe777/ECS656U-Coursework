@@ -65,6 +65,19 @@ public class GRPCClientService {
 
 	public String mult(){
 		initializeStubs();
+		if(matrix1.length==2){
+			MatrixReply reply = stubs[0].multiplyBlock(MatrixRequest.newBuilder()
+								.setA00(matrix1[0][0])
+								.setA01(matrix1[0][1])
+								.setA10(matrix1[1][0])
+								.setA11(matrix1[1][1])
+								.setB00(matrix2[0][0])
+								.setB01(matrix2[0][1])
+								.setB10(matrix2[1][0])
+								.setB11(matrix2[1][1])
+								.build());
+			return reply.getC00()+" "+reply.getC01()+"<br>"+reply.getC10()+" "+reply.getC11();
+		}
 		ArrayList<MatrixReply> final_replies = new ArrayList<>();
 		ArrayList<MatrixReply> mult_replies = new ArrayList<>();
 		final int MAX_SERVER = 7;
@@ -327,15 +340,15 @@ public class GRPCClientService {
 	private String getResponse(ArrayList<MatrixReply> replies) {
 		int size = matrix1.length;
 		int [][] responses_as_matrix = new int[size][size];
-		int block_index = 0;
+		int k = 0;
 		for (int i = 0; i < size; i +=2) {
 			for (int j = 0; j <size ; j += 2) {
 
-				responses_as_matrix[i][j] = replies.get(block_index).getC00();
-				responses_as_matrix[i][j + 1] = replies.get(block_index).getC01();
-				responses_as_matrix[i + 1][j] = replies.get(block_index).getC10();
-				responses_as_matrix[i + 1][j + 1] = replies.get(block_index).getC11();
-				block_index++;
+				responses_as_matrix[i][j] = replies.get(k).getC00();
+				responses_as_matrix[i][j + 1] = replies.get(k).getC01();
+				responses_as_matrix[i + 1][j] = replies.get(k).getC10();
+				responses_as_matrix[i + 1][j + 1] = replies.get(k).getC11();
+				k++;
 			}
 		}
 		String response = "";
@@ -343,9 +356,9 @@ public class GRPCClientService {
     	{
     		for (int j=0; j<responses_as_matrix[i].length;j++)
     		{
-    			response+=(responses_as_matrix[i][j]+" ");
+    			response+=responses_as_matrix[i][j]+" ";
     		}
-    		response+=("<br>");
+    		response+="<br>";
     	}
 		return response;
 	}
