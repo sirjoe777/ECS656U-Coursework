@@ -324,7 +324,7 @@ public class GRPCClientService {
 		}
 	}
 
-	private String assembleBack(ArrayList<MatrixReply> replies){
+	private String getResponse(ArrayList<MatrixReply> replies){
 		String res = "";
         int length = (int)Math.sqrt((double)replies.size());
 
