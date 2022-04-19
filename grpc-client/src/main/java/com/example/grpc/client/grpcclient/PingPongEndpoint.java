@@ -1,5 +1,4 @@
 package com.example.grpc.client.grpcclient;
-
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.springframework.boot.SpringApplication;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.IOException;
-
 import javax.naming.NamingException;
 
 @Controller
@@ -26,32 +23,36 @@ public class PingPongEndpoint {
 	private String string_matrix1; 
 	private String string_matrix2; 
 	private float deadline;
-
-	
 	GRPCClientService grpcClientService;    
+
 	@Autowired
 	public PingPongEndpoint(GRPCClientService grpcClientService) {
 		this.grpcClientService = grpcClientService;
-	}    
+	}  
+
 	@GetMapping("/ping")
 	public String ping() {
 		return grpcClientService.ping();
 	}
+
     @GetMapping("/add")
 	@ResponseBody
 	public String add() {
 		return grpcClientService.add();
 	}
+
 	@GetMapping("/mult")
 	@ResponseBody
 	public String mult() {
 		return grpcClientService.mult(deadline);
 	}
+
 	//Redirect to upload form
 	@GetMapping("/")
 	public String upload () {
 		return "uploadForm";
 	}
+
 	//Handle file upload by calling function in ClientService to process matrices
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("matrix1") MultipartFile file1, @RequestParam("matrix2") MultipartFile file2, @RequestParam("deadline") String string_deadline, RedirectAttributes redirectAttributes) throws IOException{
@@ -81,6 +82,7 @@ public class PingPongEndpoint {
 		System.out.println(deadline);
 		return grpcClientService.processMatrices(string_matrix1, string_matrix2, redirectAttributes);
 	}
+	
 	//Display uploaded matrices
 	@GetMapping("/display")
 	@ResponseBody

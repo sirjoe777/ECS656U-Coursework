@@ -1,12 +1,9 @@
 package com.example.grpc.client.grpcclient;
-
 import com.example.grpc.server.grpcserver.PingRequest;
 import com.example.grpc.server.grpcserver.PongResponse;
 import com.example.grpc.server.grpcserver.PingPongServiceGrpc;
 import com.example.grpc.server.grpcserver.MatrixRequest;
-
 import java.util.ArrayList;
-
 import com.example.grpc.server.grpcserver.MatrixReply;
 import com.example.grpc.server.grpcserver.MatrixServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -16,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Service
 public class GRPCClientService {
 	private final String[] IPS = {"10.128.0.7","10.128.0.8","10.128.0.16","10.128.0.10","10.128.0.11","10.128.0.12","10.128.0.13","10.128.0.17"};
@@ -38,7 +36,7 @@ public class GRPCClientService {
 		return helloResponse.getPong();
     }
     public String add(){
-		initializeStubs();
+		createStubs();
 		ArrayList<MatrixReply> replies = new ArrayList<>();
 		final int MAX_SERVER = 7;
 		int current_server = 0;
@@ -64,9 +62,14 @@ public class GRPCClientService {
     }
 
 	public String mult(float deadline){
-		initializeStubs();
+		createStubs();
+
+		//Initialize server to -1 because these will be calculated later with deadline and footprinting
 		int max_servers = -1;
+		//Convert the provided deadline (if any) to nanoseconds
 		long deadline_nano = (long)((Math.pow(10,9))*deadline);
+		
+		//Base case: the matrices are 2x2 so they consist of a single block
 		if(matrix1.length==2){
 			MatrixReply reply = stubs[0].multiplyBlock(MatrixRequest.newBuilder()
 								.setA00(matrix1[0][0])
@@ -80,18 +83,28 @@ public class GRPCClientService {
 								.build());
 			return reply.getC00()+" "+reply.getC01()+"<br>"+reply.getC10()+" "+reply.getC11();
 		}
+
+		//If matrices are not 2x2 then use divide and conquer approach
+		//described on https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm#Divide-and-conquer_algorithm
 		ArrayList<MatrixReply> final_replies = new ArrayList<>();
 		ArrayList<MatrixReply> mult_replies = new ArrayList<>();
 		int current_server = 0;
 		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
+
+		//Divide matrices into a matrix of 2x2 blocks
 		int[][][][] blocks1 = createBlocks2(matrix1);
 		int[][][][] blocks2 = createBlocks2(matrix2);
 		int size = (int)Math.sqrt(blocks1.length);
+
+		//Perform divide-and-conquer matrix multiplication where each 2x2 block is multiplied using
+		//the function provided in the server
 		for (int i=0; i<size; i++){
 			for (int j=0; j<size; j++){
 				for (int k=0; k<size; k++){
 					int [][] current_block1 = blocks1[i][k];
 					int [][] current_block2 = blocks2[k][j];
+
+					//Calculate time before function call to find footprinting (if needed)
 					long start = System.nanoTime();
 					MatrixReply current_mult = stubs[current_server].multiplyBlock(MatrixRequest.newBuilder()
 					.setA00(current_block1[0][0])
@@ -103,14 +116,19 @@ public class GRPCClientService {
 					.setB10(current_block2[1][0])
 					.setB11(current_block2[1][1])
 					.build());
+
+					//If the user provided a deadline and if we haven't initialized the maximum number
+					//of servers yet, then use footprinting to calculate it
 					if (deadline>0 && max_servers==-1){
+						// three nested loops, each "size" number of times, for each of these we call the
+						// multiplyBlock function once (we subtract one so we don't account for the 
+						// function call we used to calculate footprint)
 						int number_of_operations = (int)Math.pow(size,3)-1;
 						long end = System.nanoTime();
 						long footprint = end-start;
 						max_servers = (int)((footprint*number_of_operations)/deadline_nano);
-						System.out.println("Deadline: "+deadline_nano);
-						System.out.println("Footprint: "+footprint);
-						System.out.println("Servers: "+max_servers);
+
+						//Make sure max is between 1 and 8
 						if (max_servers<1) max_servers=1;
 						else if (max_servers>7) max_servers = 8;
 					}
@@ -119,10 +137,14 @@ public class GRPCClientService {
 					}
 					mult_replies.add(current_mult);
 					current_server++;
+
+					// If index of current server is 8 then reset it back to 0
 					if (current_server==max_servers) current_server=0;
 				}
 			}
 		}
+
+		//Reset current server to 0 to add the blocks after multiplication
 		current_server=0;
 		int row=1;
 		for (int i = 0; i < mult_replies.size(); i+=size) {
@@ -159,10 +181,13 @@ public class GRPCClientService {
 				current_server=0;
 			}
 		}
-		String resp = getResponse(final_replies);
+		String resp = getFinalResult(final_replies);
 		return resp;
     }
 
+	//Process files, convert the text files into matrices and store them
+	//Also check if there is any error in the files (e.g., if matrices have different sizes)
+	//and in that case redirect to upload form
 	public String processMatrices(String string_matrix1, String string_matrix2, RedirectAttributes redirectAttributes){
 		try{
 			String [] rows1 = string_matrix1.split("\n");
@@ -172,6 +197,12 @@ public class GRPCClientService {
 				redirectAttributes.addFlashAttribute("message", "Please make sure matrices' size is a power of 2.");
 				return "redirect:/";
 			}
+			//We know matrices are square, so we can check if they have same size by simply checking
+			//that the number of rows is the same.
+			if (rows1.length!=rows2.length){
+				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
+				return "redirect:/";
+			}
 			//Check if provided matrices are square
 			boolean isSquare1 = check_square_matrix(rows1);
 			boolean isSquare2 = check_square_matrix(rows2);
@@ -179,17 +210,10 @@ public class GRPCClientService {
 				redirectAttributes.addFlashAttribute("message", "Please make sure you provide square matrices.");
 				return "redirect:/";
 			}
-			//We know matrices are square, so we can check if they have same size by simply checking
-			//that the numner of rows is the same.
-			if (rows1.length!=rows2.length){
-				redirectAttributes.addFlashAttribute("message", "Please make sure matrices have the same size.");
-				return "redirect:/";
-			}
 			matrix1 = buildMatrix(rows1);
 			matrix2 = buildMatrix(rows2);
 			blocks_1 = createBlocks(matrix1);
 			blocks_2 = createBlocks(matrix2);
-			//redirectAttributes.addFlashAttribute("message", "Files successfully uploaded!");
 			return "redirect:/display";
 		}
 		catch(Exception e){
@@ -197,16 +221,6 @@ public class GRPCClientService {
 			System.out.println(e.getMessage());
 		}
 		return "redirect:/";
-	}
-
-	private void printMatrix(int [][] matrix){
-		for (int row=0; row<matrix.length; row++){
-			for(int column=0; column<matrix[row].length; column++){
-				System.out.print(matrix[row][column]);
-				System.out.print(" ");
-			}
-			System.out.println();
-		}
 	}
 
 	//Taken from https://www.geeksforgeeks.org/java-program-to-find-whether-a-no-is-power-of-two/
@@ -255,15 +269,11 @@ public class GRPCClientService {
 		return matrix;
 	}
 
-	private void printArray(String[] array){
-		for (String element : array){
-			System.out.println(element);
-		}
-	}
-
+	//Very similar to createBlocks, but here we are creating four-dimensional matrices.
+	//This is done so that we have matrices of 2x2 blocks, which can then be used for
+	//the divide-and-conquer approach in matrix multiplication
 	private int[][][][] createBlocks2(int matrix[][]){
 		final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
-        //int [][] b = new int[N_BLOCKS*2][N_BLOCKS*2];
 		int row = 0;
 		int col = 0;
         int bigger_matrix_row = 0;
@@ -296,42 +306,39 @@ public class GRPCClientService {
 		return blocks;
 	}
 
+	//Split a matrix into 2x2 blocks and store them in a list
 	private ArrayList<int[][]> createBlocks(int matrix[][]){
-		try{
-			final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
-			int row = 0;
-			int col = 0;
-			int [][] current_block = new int[2][2];
-			int ii=0;
-			int jj=0;
-			ArrayList<int[][]> result = new ArrayList<>();
-			while (row<matrix.length){
-				while (col<matrix.length){
-					for(int i=row; i<row+2; i++){
-						for (int j=col; j<col+2; j++){
-							current_block[ii][jj] = matrix[i][j];
-							jj++;
-						}
-						ii++;
-						jj=0;
+		final int N_BLOCKS = (int) Math.pow((matrix.length/2), 2);
+		int row = 0;
+		int col = 0;
+		int [][] current_block = new int[2][2];
+		int ii=0;
+		int jj=0;
+		ArrayList<int[][]> result = new ArrayList<>();
+		while (row<matrix.length){
+			while (col<matrix.length){
+				for(int i=row; i<row+2; i++){
+					for (int j=col; j<col+2; j++){
+						current_block[ii][jj] = matrix[i][j];
+						jj++;
 					}
-					ii=0;
-					col = col+2;
-					result.add(current_block);
-					current_block = new int[2][2];
+					ii++;
+					jj=0;
 				}
-				row = row+2;
-				col = 0;
+				ii=0;
+				col = col+2;
+				result.add(current_block);
+				current_block = new int[2][2];
 			}
-			return result;
+			row = row+2;
+			col = 0;
 		}
-		catch(Exception e){
-			System.out.println("createblocks\n"+e.getMessage());
-			return null;
-		}
+		return result;
 	}
 
-	private String getResponse(ArrayList<MatrixReply> replies) {
+	//Reassemble the blocks into a matrix and return a String representation of
+	//the final result
+	private String getFinalResult(ArrayList<MatrixReply> replies) {
 		int size = matrix1.length;
 		int [][] responses_as_matrix = new int[size][size];
 		int k = 0;
@@ -357,7 +364,7 @@ public class GRPCClientService {
 		return response;
 	}
 
-	private void initializeStubs(){
+	private void createStubs(){
 		for (int i=0; i<IPS.length; i++){
 			ManagedChannel channel = ManagedChannelBuilder.forAddress(IPS[i],9090)
 			.usePlaintext()
