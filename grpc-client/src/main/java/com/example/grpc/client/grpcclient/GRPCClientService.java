@@ -115,7 +115,7 @@ public class GRPCClientService {
 					.setB11(mult_replies.get(j+1).getC11())
 					.build());
 				} else {
-					prev_reply = stubs[current_server].addBlock(createRequestAdd(MatrixRequest.newBuilder()
+					prev_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(prev_reply.getC00())
 					.setA01(prev_reply.getC01())
 					.setA10(prev_reply.getC10())
@@ -124,7 +124,7 @@ public class GRPCClientService {
 					.setB01(mult_replies.get(j).getC01())
 					.setB10(mult_replies.get(j).getC10())
 					.setB11(mult_replies.get(j).getC11())
-					.build()));
+					.build());
 					j--;
 				}
 			}
