@@ -262,8 +262,8 @@ public class GRPCClientService {
 		int [][] current_block = new int[2][2];
         int ii=0;
         int jj=0;
-		while (row<N_BLOCKS){
-			while (col<N_BLOCKS){
+		while (row<matrix.length){
+			while (col<matrix.length){
 				for(int i=row; i<row+2; i++){
 					for (int j=col; j<col+2; j++){
 						current_block[ii][jj] = matrix[i][j];
@@ -295,8 +295,8 @@ public class GRPCClientService {
 			int ii=0;
 			int jj=0;
 			ArrayList<int[][]> result = new ArrayList<>();
-			while (row<N_BLOCKS){
-				while (col<N_BLOCKS){
+			while (row<matrix.length){
+				while (col<matrix.length){
 					for(int i=row; i<row+2; i++){
 						for (int j=col; j<col+2; j++){
 							current_block[ii][jj] = matrix[i][j];
