@@ -86,7 +86,6 @@ public class GRPCClientService {
 		int[][][][] blocks2 = createBlocks2(matrix2);
 		int size = (int)Math.sqrt(blocks1.length);
 		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
-		int [][] accumulator = new int[2][2];
 		for (int i=0; i<size; i++){
 			for (int j=0; j<size; j++){
 				for (int k=0; k<size; k++){
@@ -109,63 +108,38 @@ public class GRPCClientService {
 			}
 		}
 		current_server=0;
-		MatrixReply prev_reply = null;
-
-		int rows=size*2;
-		int blocks_per_row=rows/2;
-
-		
-		int row_n=1;
+		MatrixReply reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
+												.setA00(mult_replies.get(0).getC00())
+												.setA01(mult_replies.get(0).getC01())
+												.setA10(mult_replies.get(0).getC10())
+												.setA11(mult_replies.get(0).getC11())
+												.setB00(mult_replies.get(1).getC00())
+												.setB01(mult_replies.get(1).getC01())
+												.setB10(mult_replies.get(1).getC10())
+												.setB11(mult_replies.get(1).getC11())
+												.build());
+		int blocks_per_row=matrix1.length/2;
 		for (int i = 0; i < mult_replies.size(); i+=blocks_per_row) {
-			for (int j=i;j<blocks_per_row*row_n;j+=2) {
-				if (j==i) {
-					prev_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
-					.setA00(mult_replies.get(j).getC00())
-					.setA01(mult_replies.get(j).getC01())
-					.setA10(mult_replies.get(j).getC10())
-					.setA11(mult_replies.get(j).getC11())
-					.setB00(mult_replies.get(j+1).getC00())
-					.setB01(mult_replies.get(j+1).getC01())
-					.setB10(mult_replies.get(j+1).getC10())
-					.setB11(mult_replies.get(j+1).getC11())
-					.build());
-				} else {
-					prev_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
-					.setA00(prev_reply.getC00())
-					.setA01(prev_reply.getC01())
-					.setA10(prev_reply.getC10())
-					.setA11(prev_reply.getC11())
+			for (int j=i;j<blocks_per_row;j+=2) {
+					reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
+					.setA00(reply.getC00())
+					.setA01(reply.getC01())
+					.setA10(reply.getC10())
+					.setA11(reply.getC11())
 					.setB00(mult_replies.get(j).getC00())
 					.setB01(mult_replies.get(j).getC01())
 					.setB10(mult_replies.get(j).getC10())
 					.setB11(mult_replies.get(j).getC11())
 					.build());
-					j--;
-				}
 			}
-			final_replies.add((prev_reply)); 
-			
-			
-			row_n++;
+			final_replies.add(reply); 
 			current_server++;
 			//start again from server 0
 			if (current_server==MAX_SERVER) {
 				current_server=0;
 			}
 		}
-
-		// current_reply = stubs[current_server_add].addBlock(MatrixRequest.newBuilder()
-		// .setA00(current_mult.getC00())
-		// .setA01(current_mult.getC01())
-		// .setA10(current_mult.getC10())
-		// .setA11(current_mult.getC11())
-		// .setB00(current_reply.getC00())
-		// .setB01(current_reply.getC01())
-		// .setB10(current_reply.getC10())
-		// .setB11(current_reply.getC11())
-		// .build());
 		String resp = getResponse(final_replies);
-		System.out.println(final_replies.size());
 		return resp;
     }
 
