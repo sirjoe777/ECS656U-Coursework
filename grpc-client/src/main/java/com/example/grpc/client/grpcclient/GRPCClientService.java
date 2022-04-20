@@ -148,7 +148,7 @@ public class GRPCClientService {
 		current_server=0;
 		int row=1;
 		for (int i = 0; i < mult_replies.size(); i+=size) {
-			for (int j=i;j<size*row;j+=2) {
+			for (int j=i;j<size*row;j++) {
 				if (j==i) {
 					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(mult_replies.get(j).getC00())
@@ -160,6 +160,7 @@ public class GRPCClientService {
 					.setB10(mult_replies.get(j+1).getC10())
 					.setB11(mult_replies.get(j+1).getC11())
 					.build());
+					j++;
 				} else {
 					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(current_reply.getC00())
@@ -171,7 +172,6 @@ public class GRPCClientService {
 					.setB10(mult_replies.get(j).getC10())
 					.setB11(mult_replies.get(j).getC11())
 					.build());
-					j--;
 				}
 			}
 			final_replies.add(current_reply); 
