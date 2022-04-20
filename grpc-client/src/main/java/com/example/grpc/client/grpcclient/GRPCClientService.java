@@ -57,7 +57,7 @@ public class GRPCClientService {
 			current_server++;
 			if(current_server==8) current_server=0; 
 		}
-		String resp = getFinalResult(replies);
+		String resp = getResponse(replies);
 		return resp;
     }
 
