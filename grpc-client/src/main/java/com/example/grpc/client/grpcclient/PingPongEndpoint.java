@@ -96,4 +96,18 @@ public class PingPongEndpoint {
 		else return "Please make sure you have uploaded files containing matrices!";
 		
 	}
+
+		/* *************************************************************
+	                FOR DEMONSTRATION ONLY
+	
+	This method computes multiplication using a single server.
+	Used in video demonstration to show the speedup when multiple 
+	servers are used
+
+	*****************************************************************/
+	@GetMapping("/simplemult")
+	@ResponseBody
+	public String simplemult() {
+		return grpcClientService.simpleMult();
+	}
 }
