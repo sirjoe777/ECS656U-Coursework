@@ -94,7 +94,7 @@ public class GRPCClientService {
 		//Divide matrices into a matrix of 2x2 blocks
 		int[][][][] blocks1 = createBlocks2(matrix1);
 		int[][][][] blocks2 = createBlocks2(matrix2);
-		int size = matrix1.length/2;
+		int size = (int)Math.sqrt(blocks1.length);
 
 		//Perform divide-and-conquer matrix multiplication where each 2x2 block is multiplied using
 		//the function provided in the server
@@ -127,6 +127,7 @@ public class GRPCClientService {
 						long end = System.nanoTime();
 						long footprint = end-start;
 						max_servers = (int)((footprint*number_of_operations)/deadline_nano);
+
 						//Make sure max is between 1 and 8
 						if (max_servers<1) max_servers=1;
 						else if (max_servers>7) max_servers = 8;
@@ -145,11 +146,7 @@ public class GRPCClientService {
 
 		//Reset current server to 0 to add the blocks after multiplication
 		current_server=0;
-
-		//We use this variable because i is shifted by size, and since j starts at i in the loop,
-		//We need j to iterate between i and size*(i+1)
 		int row=1;
-
 		for (int i = 0; i < mult_replies.size(); i+=size) {
 			for (int j=i;j<size*row;j+=2) {
 				if (j==i) {
@@ -163,7 +160,6 @@ public class GRPCClientService {
 					.setB10(mult_replies.get(j+1).getC10())
 					.setB11(mult_replies.get(j+1).getC11())
 					.build());
-					j++;
 				} else {
 					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(current_reply.getC00())
@@ -185,7 +181,8 @@ public class GRPCClientService {
 				current_server=0;
 			}
 		}
-		return getFinalResult(final_replies);
+		String resp = getFinalResult(final_replies);
+		return resp;
     }
 
 	//Process files, convert the text files into matrices and store them
