@@ -130,7 +130,6 @@ public class GRPCClientService {
 						//Make sure max is between 1 and 8
 						if (max_servers<1) max_servers=1;
 						else if (max_servers>7) max_servers = 8;
-						System.out.println("Using "+max_servers+" servers");
 					}
 					else{
 						max_servers=8;
@@ -152,7 +151,7 @@ public class GRPCClientService {
 		int row=1;
 
 		for (int i = 0; i < mult_replies.size(); i+=size) {
-			for (int j=i;j<size*row;j++) {
+			for (int j=i;j<size*row;j+=2) {
 				if (j==i) {
 					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
 					.setA00(mult_replies.get(j).getC00())
@@ -176,6 +175,7 @@ public class GRPCClientService {
 					.setB10(mult_replies.get(j).getC10())
 					.setB11(mult_replies.get(j).getC11())
 					.build());
+					j--;
 				}
 			}
 			final_replies.add(current_reply); 
