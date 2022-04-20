@@ -146,7 +146,11 @@ public class GRPCClientService {
 
 		//Reset current server to 0 to add the blocks after multiplication
 		current_server=0;
+
+		//We use this variable because i is shifted by size, and since j starts at i in the loop,
+		//We need j to iterate between i and size*(i+1)
 		int row=1;
+
 		for (int i = 0; i < mult_replies.size(); i+=size) {
 			for (int j=i;j<size*row;j++) {
 				if (j==i) {
@@ -181,8 +185,7 @@ public class GRPCClientService {
 				current_server=0;
 			}
 		}
-		String resp = getFinalResult(final_replies);
-		return resp;
+		return getFinalResult(final_replies);
     }
 
 	//Process files, convert the text files into matrices and store them
@@ -374,100 +377,4 @@ public class GRPCClientService {
 			stubs[i] = stub;
 		}
 	}
-
-	/* *************************************************************
-	                FOR DEMONSTRATION ONLY
-	
-	This method computes multiplication using a single server.
-	Used in video demonstration to show the speedup when multiple 
-	servers are used
-
-	*****************************************************************/
-	public String simpleMult(){
-		createStubs();
-		//Base case: the matrices are 2x2 so they consist of a single block
-		if(matrix1.length==2){
-			MatrixReply reply = stubs[0].multiplyBlock(MatrixRequest.newBuilder()
-								.setA00(matrix1[0][0])
-								.setA01(matrix1[0][1])
-								.setA10(matrix1[1][0])
-								.setA11(matrix1[1][1])
-								.setB00(matrix2[0][0])
-								.setB01(matrix2[0][1])
-								.setB10(matrix2[1][0])
-								.setB11(matrix2[1][1])
-								.build());
-			return reply.getC00()+" "+reply.getC01()+"<br>"+reply.getC10()+" "+reply.getC11();
-		}
-
-		//If matrices are not 2x2 then use divide and conquer approach
-		//described on https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm#Divide-and-conquer_algorithm
-		ArrayList<MatrixReply> final_replies = new ArrayList<>();
-		ArrayList<MatrixReply> mult_replies = new ArrayList<>();
-		int current_server = 0;
-		MatrixReply current_reply = MatrixReply.newBuilder().setC00(0).setC01(0).setC10(0).setC11(0).build();
-
-		//Divide matrices into a matrix of 2x2 blocks
-		int[][][][] blocks1 = createBlocks2(matrix1);
-		int[][][][] blocks2 = createBlocks2(matrix2);
-		int size = matrix1.length/2;
-
-		//Perform divide-and-conquer matrix multiplication where each 2x2 block is multiplied using
-		//the function provided in the server
-		for (int i=0; i<size; i++){
-			for (int j=0; j<size; j++){
-				for (int k=0; k<size; k++){
-					int [][] current_block1 = blocks1[i][k];
-					int [][] current_block2 = blocks2[k][j];
-
-					//Calculate time before function call to find footprinting (if needed)
-					long start = System.nanoTime();
-					MatrixReply current_mult = stubs[current_server].multiplyBlock(MatrixRequest.newBuilder()
-					.setA00(current_block1[0][0])
-					.setA01(current_block1[0][1])
-					.setA10(current_block1[1][0])
-					.setA11(current_block1[1][1])
-					.setB00(current_block2[0][0])
-					.setB01(current_block2[0][1])
-					.setB10(current_block2[1][0])
-					.setB11(current_block2[1][1])
-					.build());
-					mult_replies.add(current_mult);
-				}
-			}
-		}
-		int row=1;
-		for (int i = 0; i < mult_replies.size(); i+=size) {
-			for (int j=i;j<size*row;j++) {
-				if (j==i) {
-					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
-					.setA00(mult_replies.get(j).getC00())
-					.setA01(mult_replies.get(j).getC01())
-					.setA10(mult_replies.get(j).getC10())
-					.setA11(mult_replies.get(j).getC11())
-					.setB00(mult_replies.get(j+1).getC00())
-					.setB01(mult_replies.get(j+1).getC01())
-					.setB10(mult_replies.get(j+1).getC10())
-					.setB11(mult_replies.get(j+1).getC11())
-					.build());
-					j++;
-				} else {
-					current_reply = stubs[current_server].addBlock(MatrixRequest.newBuilder()
-					.setA00(current_reply.getC00())
-					.setA01(current_reply.getC01())
-					.setA10(current_reply.getC10())
-					.setA11(current_reply.getC11())
-					.setB00(mult_replies.get(j).getC00())
-					.setB01(mult_replies.get(j).getC01())
-					.setB10(mult_replies.get(j).getC10())
-					.setB11(mult_replies.get(j).getC11())
-					.build());
-				}
-			}
-			final_replies.add(current_reply); 
-			row++;
-		}
-		String resp = getFinalResult(final_replies);
-		return resp;
-    }
 }
